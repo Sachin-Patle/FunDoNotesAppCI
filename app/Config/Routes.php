@@ -23,20 +23,6 @@ $routes->set404Override();
 $routes->setAutoRoute(true);
 
 
-//User
-$routes->get('register', 'UserController::register');
-$routes->get('login', 'UserController::login');
-$routes->get('logout', 'UserController::logout');
-$routes->post('registration', 'UserController::user_registration');
-$routes->post('user_login', 'UserController::user_login');
-
-// CRUD RESTful Routes
-$routes->get('notes-list', 'NotesController::index');
-$routes->get('all-notes', 'NotesController::all_notes');
-$routes->post('save-note', 'NotesController::save_note');
-$routes->put('update-note', 'NotesController::update_note');
-$routes->get('delete/(:num)', 'NotesController::delete/$1');
-
 /**
  * --------------------------------------------------------------------
  * Route Definitions
@@ -47,6 +33,41 @@ $routes->get('delete/(:num)', 'NotesController::delete/$1');
 // route since we don't have to scan directories.
 $routes->get('/', 'UserController::login');
 
+/**
+ * Routes of UserController class 
+ * @description
+ * Handling login, registration of user
+ * Working with Sessions
+ */
+$routes->get('register', 'UserController::register');
+$routes->get('login', 'UserController::login');
+$routes->get('logout', 'UserController::logout');
+$routes->post('registration', 'UserController::user_registration');
+$routes->post('user_login', 'UserController::user_login');
+
+/**
+ * Routes of NotesController class 
+ * @description
+ * Handling CRUD operations for notes
+ */
+$routes->get('notes', 'NotesController::notes');
+$routes->post('get-note', 'NotesController::single_note');
+$routes->get('notes-list', 'NotesController::notes_list');
+$routes->post('save-note', 'NotesController::save_note');
+$routes->post('delete-note', 'NotesController::delete_note');
+$routes->post('update-note', 'NotesController::update_note');
+
+/**
+ * Routes of LabelsController class 
+ * @description
+ * Handling CRUD operations for labels
+ */
+$routes->get('labels', 'LabelsController::labels');
+$routes->post('get-label', 'LabelsController::single_label');
+$routes->get('labels-list', 'LabelsController::labels_list');
+$routes->post('save-label', 'LabelsController::save_label');
+$routes->post('delete-label', 'LabelsController::delete_label');
+$routes->post('update-label', 'LabelsController::update_label');
 /**
  * --------------------------------------------------------------------
  * Additional Routing

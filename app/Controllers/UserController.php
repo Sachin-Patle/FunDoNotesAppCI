@@ -43,17 +43,24 @@ class UserController extends Controller
      */
     public function user_registration() {
         $user_obj = new UserModel();
-        $data = [
-            'first_name' => $this->request->getVar('first_name'),
-            'last_name' => $this->request->getVar('last_name'),
-            'email' => $this->request->getVar('email'),
-            'password'  => $this->request->getVar('password'),
-            'status' => true,
-            'created' => date('d-m-y h:i:s'),
+        if(!empty($user_obj->where('email',$this->request->getVar('email'))->first()))
+        {
+            return $this->response->redirect(site_url('/register'));   
+        }
+        else
+        {
+            $data = [
+                'first_name' => $this->request->getVar('first_name'),
+                'last_name' => $this->request->getVar('last_name'),
+                'email' => $this->request->getVar('email'),
+                'password'  => $this->request->getVar('password'),
+                'status' => true,
+                'created' => date('d-m-y h:i:s'),
 
-        ];
-        $user_obj->insert($data);
-        return $this->response->redirect(site_url('/login'));
+            ];
+            $user_obj->insert($data);
+            return $this->response->redirect(site_url('/login'));
+        }
     }
 
     /**
@@ -72,10 +79,11 @@ class UserController extends Controller
         ];
         if(!empty($user_info=$user_obj->where($form_data)->first()))
         {
-            // $this->session->set($user_info['user']);
             $_SESSION['user_id']=$user_info['id'];
-            $user_id=$this->session->user_id;
-            return $this->response->redirect(site_url('/notes-list'));
+            $_SESSION['user_name']=$user_info['first_name']." ".$user_info['last_name'];
+            $_SESSION['user_email']=$user_info['email'];
+            // $user_id=$this->session->user_id;
+            return $this->response->redirect(site_url('/notes'));
 
         }
         else{
@@ -93,6 +101,8 @@ class UserController extends Controller
      */
     public function logout(){
             unset($_SESSION['user_id']);
+            unset($_SESSION['user_name']);
+            unset($_SESSION['user_email']);
             return $this->response->redirect(site_url('/login'));
         
     }

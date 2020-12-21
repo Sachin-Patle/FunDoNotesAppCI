@@ -3,13 +3,13 @@ namespace App\Models;
 use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Model;
  
-class UserModel extends Model
+class LabelsModel extends Model
 {
-    protected $table = 'users';
+    protected $table = 'labels';
 
     protected $primaryKey = 'id';
     protected $allowedDateTime=true;
  
-    protected $allowedFields = ['first_name', 'last_name', 'email', 'password', 'status', 'created'];
+    protected $allowedFields = ['user_id', 'user_name', 'label_name', 'status', 'created'];
 
 }

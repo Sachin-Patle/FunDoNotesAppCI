@@ -1,9 +1,9 @@
 <?php 
 namespace App\Controllers;
-use App\Models\NotesModel;
+use App\Models\LabelsModel;
 use CodeIgniter\Controller;
 
-class NotesController extends Controller
+class LabelsController extends Controller
 {
     /**
      * @constructor
@@ -16,21 +16,21 @@ class NotesController extends Controller
     }
     /**
      * @method - index()
-     * @return - login/notes-list view
+     * @return - login/labels-list view
      * @descrition
-     * Method to get notes-list
-     * Getting list from notes table and return output in array format
+     * Method to get labels-list
+     * Getting list from labels table and return output in array format
      */
-    public function notes()
+    public function labels()
     {
-        $notes_obj = new NotesModel();
-        $data['notes'] = $notes_obj->orderBy('id', 'DESC')->findAll();
+        $labels_obj = new LabelsModel();
+        $data['labels'] = $labels_obj->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
         if(isset($this->session->user_id))
         {
-            return view('notes', $data);
+            return view('labels', $data);
         }
         else
         {
@@ -39,24 +39,24 @@ class NotesController extends Controller
     }
 
     /**
-     * @method - single_note()
-     * @return - edit_note view
+     * @method - single_label()
+     * @return - edit_label view
      * @description
-     * Method to get single notes details by id
+     * Method to get single labels details by id
      */
-    public function single_note()
+    public function single_label()
     {
         $post_data=[
             "id" => $this->request->getVar('id'),
         ];
-        $notes_obj = new NotesModel();
-        $data['single_note'] = $notes_obj->where($post_data)->first();
+        $labels_obj = new LabelsModel();
+        $data['single_label'] = $labels_obj->where($post_data)->first();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
         if(isset($this->session->user_id))
         {
-            return view('single-note', $data);
+            return view('single-label', $data);
         }
         else
         {
@@ -66,21 +66,21 @@ class NotesController extends Controller
 
     /**
      * @method - index()
-     * @return - login/notes-list view
+     * @return - login/labels-list view
      * @descrition
-     * Method to get notes-list
-     * Getting list from notes table and return output in array format
+     * Method to get labels-list
+     * Getting list from labels table and return output in array format
      */
-    public function notes_list()
+    public function labels_list()
     {
-        $notes_obj = new NotesModel();
-        $data['notes'] = $notes_obj->where('user_id',$this->session->user_id)->findAll();
+        $labels_obj = new LabelsModel();
+        $data['labels'] = $labels_obj->where('user_id',$this->session->user_id)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
         if(isset($this->session->user_id))
         {
-            return view('note-list', $data);
+            return view('label-list', $data);
         }
         else
         {
@@ -89,63 +89,63 @@ class NotesController extends Controller
     }
  
     /**
-     * @method - save_note()
+     * @method - save_label()
      * @description
-     * Method to get inputs by post and inserts data into notes table
+     * Method to get inputs by post and inserts data into labels table
      */
-    public function save_note() {
-        $notes_obj = new NotesModel();
+    public function save_label() {
+        $labels_obj = new LabelsModel();
         $data = [
             'user_id' => $this->session->user_id,
             'user_name' => $this->session->user_name,
             'title' => $this->request->getVar('title'),
-            'note'  => $this->request->getVar('note'),
+            'label'  => $this->request->getVar('label'),
             'status' => true,
             'created' => date('d-m-y h:i:s'),
 
         ];
 
         //Returning inserted id of current record
-        echo $notes_obj->insert($data);
+        echo $labels_obj->insert($data);
     }
 
     /**
-     * @method - update_note()
-     * @return - notes-list view
+     * @method - update_label()
+     * @return - labels-list view
      * @description
      * Method to get inputs by post and update data according to id
      */
-    public function update_note(){
-        $notes_obj = new NotesModel();
-        $id = $this->request->getVar('note_id');
+    public function update_label(){
+        $labels_obj = new LabelsModel();
+        $id = $this->request->getVar('label_id');
         $update_by = [
-            'id' => $this->request->getVar('note_id'),
+            'id' => $this->request->getVar('label_id'),
             'user_id'  => $this->session->user_id,
         ];
         $data = [
             'title' => $this->request->getVar('title'),
-            'note'  => $this->request->getVar('note'),
+            'label'  => $this->request->getVar('label'),
             'updated' => date('d-m-y h:i:s'),
         ];
-        $notes_obj->update($update_by, $data);
+        $labels_obj->update($update_by, $data);
 
-        $data['updated_note'] = $notes_obj->where('id', $id)->first();
-        return view('updated-note', $data);
+        $data['updated_label'] = $labels_obj->where('id', $id)->first();
+        return view('updated-label', $data);
     }
  
     /**
-     * @method - delete_note()
-     * @return - notes-list view
+     * @method - delete_label()
+     * @return - labels-list view
      * @description
      * Method to get input by get and delete data according to id
      */
-    public function delete_note(){
-        $notes_obj = new NotesModel();
+    public function delete_label(){
+        $labels_obj = new LabelsModel();
         $delete_by = [
-            'id' => $this->request->getVar('note_id'),
+            'id' => $this->request->getVar('label_id'),
             'user_id' => $this->session->user_id,
         ];
-        $data['note'] = $notes_obj->where($delete_by)->delete();
-        return $this->response->redirect(site_url('/notes-list'));
+        $data['label'] = $labels_obj->where($delete_by)->delete();
+        return $this->response->redirect(site_url('/labels-list'));
     } 
 }

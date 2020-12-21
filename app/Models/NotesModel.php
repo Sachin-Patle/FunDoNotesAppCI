@@ -10,11 +10,6 @@ class NotesModel extends Model
     protected $primaryKey = 'id';
     protected $allowedDateTime=true;
  
-    protected $allowedFields = ['title', 'note', 'status', 'created'];
+    protected $allowedFields = ['user_id', 'user_name', 'label_id', 'title', 'note', 'status', 'created'];
 
-    function display_records()
-	{
-		$query=$this->db->query("select * from notes");
-		return $query->result();
-	}
 }
