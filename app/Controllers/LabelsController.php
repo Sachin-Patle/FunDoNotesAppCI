@@ -87,6 +87,30 @@ class LabelsController extends Controller
             return $this->response->redirect(site_url('/login'));
         }
     }
+
+    /**
+     * @method - index()
+     * @return - login/labels-list view
+     * @descrition
+     * Method to get labels-list
+     * Getting list from labels table and return output in array format
+     */
+    public function labels_list_on_form()
+    {
+        $labels_obj = new LabelsModel();
+        $data['labels'] = $labels_obj->where('user_id',$this->session->user_id)->findAll();
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if(isset($this->session->user_id))
+        {
+            return view('label-list-on-form', $data);
+        }
+        else
+        {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
  
     /**
      * @method - save_label()
@@ -98,8 +122,7 @@ class LabelsController extends Controller
         $data = [
             'user_id' => $this->session->user_id,
             'user_name' => $this->session->user_name,
-            'title' => $this->request->getVar('title'),
-            'label'  => $this->request->getVar('label'),
+            'label_name' => $this->request->getVar('title'),
             'status' => true,
             'created' => date('d-m-y h:i:s'),
 

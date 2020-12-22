@@ -31,6 +31,17 @@
                                         <label>Note</label>
                                         <textarea class="form-control" name="note" cols="35" placeholder="Enter note message here" required></textarea>
                                     </div>
+                                    <?php
+                                    if(isset($_GET['label_id']))
+                                    {
+                                        ?>
+                                    <div class="form-group">
+                                        <input type="hidden" name="label" value="<?php echo $_GET['label'];?>">
+                                        <input type="hidden" name="label_id" value="<?php echo $_GET['label_id'];?>">
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeSubmit"><i class="fa fa-times"></i> Close</button>
@@ -58,7 +69,21 @@
 <script>
     $(document).ready(function() {
         setTimeout(function() {
-            get_notes();
+            <?php
+            if(isset($_GET['label_id']))
+            {
+                ?>
+                get_notes_by_label(<?php echo $_GET['label_id'];?>);
+                <?php
+            }
+            else{
+                ?>
+                get_notes();
+                <?php
+            }
+            ?>
+            get_labels();
+            labels_list_on_form();
         }, 10);
 
         /**
@@ -68,6 +93,15 @@
             // Prevent the form from submitting via the browser.
             event.preventDefault();
             submit_note();
+
+        });
+        /**
+         * Method when submitting form to save label details
+         */
+        $("#form_label").submit(function(event) {
+            // Prevent the form from submitting via the browser.
+            event.preventDefault();
+            submit_label();
 
         });
 
@@ -83,6 +117,72 @@
                 success: function(result) {
                     $('#notes_result').empty();
                     $('#notes_result').html(result);
+                    // $.each(result, function(i, list) {
+                    //     $('#example-table').append("<div class='col-sm-4'><div class='card'><div class='card-body'><p>ID : " + list._id + "<span class='float-right'><button class='btn btn-info btn-xs'><i class='fa fa-edit'></i></button></span></p><h5 class='card-subtitle mb-2 text-muted'>" + list.message + "</h5><p class='card-text text-right'>- " + list.name + "<p><hr><p class='card-text text-right'>- " + list.date + "<p></div></div></div>")
+                    // });
+                },
+                error: function(e) {
+                    $("#getResultDiv").html("<strong>Error</strong>");
+                    console.log("ERROR: ", e);
+                }
+            });
+        }
+        /**
+         * @method - get_notes_by_label
+         * @description
+         * Method to get and display all note details according to label
+         */
+        function get_notes_by_label(id) {
+            // alert(id);
+            $.ajax({
+                type: "GET",
+                data: {label_id:id},
+                url: "<?= site_url('/notes-by-label') ?>",
+                success: function(result) {
+                    $('#notes_result').empty();
+                    $('#notes_result').html(result);
+                },
+                error: function(e) {
+                    $("#getResultDiv").html("<strong>Error</strong>");
+                    console.log("ERROR: ", e);
+                }
+            });
+        }
+
+        /**
+         * @method - get_labels
+         * @description
+         * Method to get and display all label details
+         */
+        function get_labels() {
+            $.ajax({
+                type: "GET",
+                url: "<?= site_url('/labels-list') ?>",
+                success: function(result) {
+                    $('#label_list').empty();
+                    $('#label_list').html(result);
+                    // $.each(result, function(i, list) {
+                    //     $('#example-table').append("<div class='col-sm-4'><div class='card'><div class='card-body'><p>ID : " + list._id + "<span class='float-right'><button class='btn btn-info btn-xs'><i class='fa fa-edit'></i></button></span></p><h5 class='card-subtitle mb-2 text-muted'>" + list.message + "</h5><p class='card-text text-right'>- " + list.name + "<p><hr><p class='card-text text-right'>- " + list.date + "<p></div></div></div>")
+                    // });
+                },
+                error: function(e) {
+                    $("#getResultDiv").html("<strong>Error</strong>");
+                    console.log("ERROR: ", e);
+                }
+            });
+        }
+        /**
+         * @method - get_label_list
+         * @description
+         * Method to get and display all label details
+         */
+        function labels_list_on_form() {
+            $.ajax({
+                type: "GET",
+                url: "<?= site_url('/labels-list-on-form') ?>",
+                success: function(result) {
+                    $('#label_result').empty();
+                    $('#label_result').html(result);
                     // $.each(result, function(i, list) {
                     //     $('#example-table').append("<div class='col-sm-4'><div class='card'><div class='card-body'><p>ID : " + list._id + "<span class='float-right'><button class='btn btn-info btn-xs'><i class='fa fa-edit'></i></button></span></p><h5 class='card-subtitle mb-2 text-muted'>" + list.message + "</h5><p class='card-text text-right'>- " + list.name + "<p><hr><p class='card-text text-right'>- " + list.date + "<p></div></div></div>")
                     // });
@@ -138,6 +238,32 @@
                 error : function () {
                     // some error handling part
                     alert("Failed to add note");
+                }
+            });
+        }
+
+        /**
+         * @method - submit_label
+         * @description
+         * Method to save label
+         * Getting form data by form id and saving details through ajax
+         */
+        function submit_label()
+        {
+            var form_data = $('#form_label').serialize();
+            
+            $.ajax({
+                url:"<?= site_url('/save-label') ?>",
+                method: "POST",
+                data : form_data,
+                success : function (result) {
+                        get_labels();
+                    $("#form_label")[0].reset();
+                    $('#labelModal').modal('toggle');
+                },
+                error : function () {
+                    // some error handling part
+                    alert("Failed to add label");
                 }
             });
         }

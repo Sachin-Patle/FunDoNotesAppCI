@@ -49,6 +49,20 @@ class UserController extends Controller
         }
         else
         {
+            // $message = "Please activate the account ";
+            // $email = \Config\Services::email();
+            // $email->setFrom('patlesachin1@gmail.com', 'Testing');
+            // $email->setTo($this->request->getVar('email'));
+            // $email->setSubject('Test | shakzee.com');
+            // $email->setMessage($message);//your message here
+            // // $email->setCC('another@emailHere');//CC
+            // // $email->setBCC('thirdEmail@emialHere');// and BCC
+            // // $filename = '/img/yourPhoto.jpg'; //you can use the App patch 
+            // // $email->attach($filename);
+            
+            // $email->send();
+            // $email->printDebugger(['headers']);
+
             $data = [
                 'first_name' => $this->request->getVar('first_name'),
                 'last_name' => $this->request->getVar('last_name'),
@@ -59,7 +73,6 @@ class UserController extends Controller
 
             ];
             $user_obj->insert($data);
-            return $this->response->redirect(site_url('/login'));
         }
     }
 

@@ -16,13 +16,28 @@
                     </li>
                     <li class="heading">FEATURES</li>
                     <li>
-                        <a href="<?= site_url('/notes') ?>"><i class="sidebar-item-icon fa fa-file-text"></i>
+                        <a href="<?= site_url('/notes') ?>"><i class="sidebar-item-icon ti-light-bulb"></i>
                             <span class="nav-label">Notes</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= site_url('/labels') ?>"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Labels</span>
+                        <!-- <a href="<?= site_url('/labels') ?>"><i class="sidebar-item-icon fa fa-pencil"></i>
+                            <span class="nav-label">Edit Labels</span> -->
+                            <a href="" data-toggle="modal" data-target="#labelModal"><i class="sidebar-item-icon fa fa-pencil"></i>
+                            <span class="nav-label">Edit Labels</span>
+                        </a>
+                    </li>
+                    <li id="label_list">
+                        
+                    </li>
+                    <li>
+                        <a href="<?= site_url('/labels') ?>"><i class="sidebar-item-icon fa fa-archive"></i>
+                            <span class="nav-label">Archive</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?= site_url('/labels') ?>"><i class="sidebar-item-icon fa fa-trash"></i>
+                            <span class="nav-label">Trash</span>
                         </a>
                     </li>
                     <li>
@@ -35,3 +50,33 @@
             </div>
         </nav>
         <!-- END SIDEBAR-->
+
+         <!-- submitModal -->
+         <div class="modal fade" id="labelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add New Label</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form id="form_label">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" name="title" class="form-control" placeholder="Enter Title" required>
+                                    </div>
+                                    <div id="label_result">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeSubmit"><i class="fa fa-times"></i> Close</button>
+                                    <button type="submit" name="submitDetail" class="btn btn-primary"><i class="fa fa-check-circle"></i> Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Modal -->

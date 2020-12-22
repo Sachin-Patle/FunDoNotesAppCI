@@ -65,7 +65,7 @@ class NotesController extends Controller
     }
 
     /**
-     * @method - index()
+     * @method - notes_list()
      * @return - login/notes-list view
      * @descrition
      * Method to get notes-list
@@ -75,6 +75,34 @@ class NotesController extends Controller
     {
         $notes_obj = new NotesModel();
         $data['notes'] = $notes_obj->where('user_id',$this->session->user_id)->findAll();
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if(isset($this->session->user_id))
+        {
+            return view('note-list', $data);
+        }
+        else
+        {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
+
+    /**
+     * @method - notes_list_by_label()
+     * @return - login/notes-list view
+     * @descrition
+     * Method to get notes-list
+     * Getting list from notes table and return output in array format
+     */
+    public function notes_list_by_label()
+    {
+        $notes_obj = new NotesModel();
+        $notes_by=[
+            'user_id' => $this->session->user_id,
+            'label_id' => $this->request->getVar('label_id'),
+        ];
+        $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
@@ -98,6 +126,8 @@ class NotesController extends Controller
         $data = [
             'user_id' => $this->session->user_id,
             'user_name' => $this->session->user_name,
+            'label' => $this->request->getVar('label'),
+            'label_id' => $this->request->getVar('label_id'),
             'title' => $this->request->getVar('title'),
             'note'  => $this->request->getVar('note'),
             'status' => true,
