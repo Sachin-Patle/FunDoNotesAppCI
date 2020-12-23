@@ -49,20 +49,6 @@ class UserController extends Controller
         }
         else
         {
-            // $message = "Please activate the account ";
-            // $email = \Config\Services::email();
-            // $email->setFrom('patlesachin1@gmail.com', 'Testing');
-            // $email->setTo($this->request->getVar('email'));
-            // $email->setSubject('Test | shakzee.com');
-            // $email->setMessage($message);//your message here
-            // // $email->setCC('another@emailHere');//CC
-            // // $email->setBCC('thirdEmail@emialHere');// and BCC
-            // // $filename = '/img/yourPhoto.jpg'; //you can use the App patch 
-            // // $email->attach($filename);
-            
-            // $email->send();
-            // $email->printDebugger(['headers']);
-
             $data = [
                 'first_name' => $this->request->getVar('first_name'),
                 'last_name' => $this->request->getVar('last_name'),
@@ -73,6 +59,27 @@ class UserController extends Controller
 
             ];
             $user_obj->insert($data);
+            /**
+             * Sending Registration Mail
+             */
+            $user_email=$this->request->getVar('email');
+            $message = "Thanks for Registration ";
+            $email = \Config\Services::email();
+            $email->setFrom('sachinpatlestech@gmail.com', 'Sachin');
+            $email->setTo($user_email);
+            $email->setSubject('Test | FundoNotes');
+            $email->setMessage($message);//your message here
+            $result=$email->send();
+            // if($email->send(false))
+            // {
+            //     $result=$email->printDebugger(['headers']);
+            // }
+            // else
+            // {
+            //     $result="Sent";
+            // }
+            
+            return $this->response->redirect(site_url('/login')); 
         }
     }
 
@@ -92,10 +99,14 @@ class UserController extends Controller
         ];
         if(!empty($user_info=$user_obj->where($form_data)->first()))
         {
-            $_SESSION['user_id']=$user_info['id'];
-            $_SESSION['user_name']=$user_info['first_name']." ".$user_info['last_name'];
-            $_SESSION['user_email']=$user_info['email'];
-            // $user_id=$this->session->user_id;
+            $user_data = [
+                'user_id' => $user_info['id'],
+                'user_email' => $user_info['email'],
+                'user_name' => $user_info['first_name']." ".$user_info['last_name']
+        ];
+
+        $this->session->set($user_data); // setting session data
+
             return $this->response->redirect(site_url('/notes'));
 
         }

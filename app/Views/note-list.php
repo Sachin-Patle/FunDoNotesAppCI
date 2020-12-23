@@ -18,6 +18,7 @@
                             </div>
                             <div class="ibox-footer">
                                 <div class="float-right">
+                                <button id="archive_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-info btn-sm"><i class="fa fa-archive"></i></button>
                                 <button data-toggle="modal" data-target="#editModal<?php echo $note['id']; ?>" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i></button>
                                 <button data-toggle="modal" data-target="#deleteModal<?php echo $note['id']; ?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                                 </div>
@@ -102,6 +103,14 @@
                                 event.preventDefault();
                                 delete_note();
                                 get_notes();
+                            });
+                            /**
+                             * Method when click on archive button
+                             */
+                            $("#archive_note<?php echo $note['id']; ?>").click(function(event) {
+                                // Prevent the form from submitting via the browser.
+                                event.preventDefault();
+                                set_archive(this.value);
                             });
                             /**
                             * @method - update_note

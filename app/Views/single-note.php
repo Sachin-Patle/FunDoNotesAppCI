@@ -13,13 +13,14 @@
                                 <p><?php echo $single_note['note']; ?></p>
                                 
                             </div>
-                            <div class="card-footer">
+                            <div class="ibox-footer">
                                 <div class="float-right">
+                                <button data-toggle="modal" data-target="#archiveModal<?php echo $single_note['id']; ?>" class="btn btn-info btn-sm"><i class="fa fa-archive"></i></button>
                                 <button data-toggle="modal" data-target="#editModal<?php echo $single_note['id']; ?>" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i></button>
                                 <button data-toggle="modal" data-target="#deleteModal<?php echo $single_note['id']; ?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                                 <!-- <a onclick="return confirm('Are you sure want to delete ?')" href="<?php echo base_url('delete/'.$single_note['id']);?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a> -->
                                 </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
 

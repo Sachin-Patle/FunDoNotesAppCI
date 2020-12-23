@@ -10,6 +10,6 @@ class NotesModel extends Model
     protected $primaryKey = 'id';
     protected $allowedDateTime=true;
  
-    protected $allowedFields = ['user_id', 'user_name', 'label_id', 'label', 'title', 'note', 'status', 'created'];
+    protected $allowedFields = ['user_id', 'user_name', 'label_id', 'label', 'title', 'note', 'status', 'archive', 'created'];
 
 }

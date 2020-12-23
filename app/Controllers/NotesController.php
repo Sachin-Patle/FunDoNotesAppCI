@@ -23,14 +23,12 @@ class NotesController extends Controller
      */
     public function notes()
     {
-        $notes_obj = new NotesModel();
-        $data['notes'] = $notes_obj->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
         if(isset($this->session->user_id))
         {
-            return view('notes', $data);
+            return view('notes');
         }
         else
         {
@@ -74,7 +72,12 @@ class NotesController extends Controller
     public function notes_list()
     {
         $notes_obj = new NotesModel();
-        $data['notes'] = $notes_obj->where('user_id',$this->session->user_id)->findAll();
+        $notes_by=[
+            'user_id' => $this->session->user_id,
+            'status' => true,
+            'archive' => false,
+        ];
+        $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
@@ -101,6 +104,8 @@ class NotesController extends Controller
         $notes_by=[
             'user_id' => $this->session->user_id,
             'label_id' => $this->request->getVar('label_id'),
+            'status' => true,
+            'archive' => false,
         ];
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**

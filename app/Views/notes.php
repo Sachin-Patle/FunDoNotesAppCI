@@ -258,6 +258,7 @@
                 data : form_data,
                 success : function (result) {
                         get_labels();
+                        labels_list_on_form();
                     $("#form_label")[0].reset();
                     $('#labelModal').modal('toggle');
                 },

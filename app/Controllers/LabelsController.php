@@ -146,14 +146,13 @@ class LabelsController extends Controller
             'user_id'  => $this->session->user_id,
         ];
         $data = [
-            'title' => $this->request->getVar('title'),
-            'label'  => $this->request->getVar('label'),
+            'label_name' => $this->request->getVar('label_name'),
             'updated' => date('d-m-y h:i:s'),
         ];
         $labels_obj->update($update_by, $data);
 
-        $data['updated_label'] = $labels_obj->where('id', $id)->first();
-        return view('updated-label', $data);
+        // $data['updated_label'] = $labels_obj->where('id', $id)->first();
+        // return view('updated-label', $data);
     }
  
     /**

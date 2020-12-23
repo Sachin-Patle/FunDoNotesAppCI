@@ -67,15 +67,17 @@
                                         <label>Title</label>
                                         <input type="text" name="title" class="form-control" placeholder="Enter Title" required>
                                     </div>
-                                    <div id="label_result">
-
-                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeSubmit"><i class="fa fa-times"></i> Close</button>
                                     <button type="submit" name="submitDetail" class="btn btn-primary"><i class="fa fa-check-circle"></i> Save</button>
                                 </div>
                             </form>
+                            <div class="modal-body">
+                                    <div id="label_result">
+
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
