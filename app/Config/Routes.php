@@ -51,12 +51,20 @@ $routes->post('user_login', 'UserController::user_login');
  * Handling CRUD operations for notes
  */
 $routes->get('notes', 'NotesController::notes');
+$routes->get('archive', 'NotesController::archive');
+$routes->get('trash', 'NotesController::trash');
 $routes->post('get-note', 'NotesController::single_note');
 $routes->get('notes-list', 'NotesController::notes_list');
 $routes->get('notes-by-label', 'NotesController::notes_list_by_label');
 $routes->post('save-note', 'NotesController::save_note');
 $routes->post('delete-note', 'NotesController::delete_note');
 $routes->post('update-note', 'NotesController::update_note');
+$routes->post('set-archive', 'NotesController::set_archive');
+$routes->post('unset-archive', 'NotesController::unset_archive');
+$routes->get('archive-list', 'NotesController::archive_list');
+$routes->get('trash-list', 'NotesController::trash_list');
+$routes->post('trash-note', 'NotesController::trash_note');
+$routes->post('restore-note', 'NotesController::restore_note');
 
 /**
  * Routes of LabelsController class 

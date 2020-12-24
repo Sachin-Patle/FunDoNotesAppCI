@@ -31,12 +31,12 @@
                         
                     </li>
                     <li>
-                        <a href="<?= site_url('/labels') ?>"><i class="sidebar-item-icon fa fa-archive"></i>
+                        <a href="<?= site_url('/archive') ?>"><i class="sidebar-item-icon fa fa-archive"></i>
                             <span class="nav-label">Archive</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?= site_url('/labels') ?>"><i class="sidebar-item-icon fa fa-trash"></i>
+                        <a href="<?= site_url('/trash') ?>"><i class="sidebar-item-icon fa fa-trash"></i>
                             <span class="nav-label">Trash</span>
                         </a>
                     </li>

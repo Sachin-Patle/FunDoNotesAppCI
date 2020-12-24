@@ -15,7 +15,7 @@ class NotesController extends Controller
         $this->session = \Config\Services::session();
     }
     /**
-     * @method - index()
+     * @method - notes()
      * @return - login/notes-list view
      * @descrition
      * Method to get notes-list
@@ -29,6 +29,50 @@ class NotesController extends Controller
         if(isset($this->session->user_id))
         {
             return view('notes');
+        }
+        else
+        {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
+
+    /**
+     * @method - archive()
+     * @return - login/notes-list view
+     * @descrition
+     * Method to get notes-list
+     * Getting list from notes table and return output in array format
+     */
+    public function archive()
+    {
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if(isset($this->session->user_id))
+        {
+            return view('archive');
+        }
+        else
+        {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
+
+    /**
+     * @method - trash()
+     * @return - login/trash-notes-list view
+     * @descrition
+     * Method to get notes-list from trash
+     * Getting list from notes table and return output in array format
+     */
+    public function trash()
+    {
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if(isset($this->session->user_id))
+        {
+            return view('trash');
         }
         else
         {
@@ -76,6 +120,62 @@ class NotesController extends Controller
             'user_id' => $this->session->user_id,
             'status' => true,
             'archive' => false,
+        ];
+        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if(isset($this->session->user_id))
+        {
+            return view('note-list', $data);
+        }
+        else
+        {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
+
+    /**
+     * @method - archive_list()
+     * @return - login/notes-list view
+     * @descrition
+     * Method to get notes-list
+     * Getting list from notes table and return output in array format
+     */
+    public function archive_list()
+    {
+        $notes_obj = new NotesModel();
+        $notes_by=[
+            'user_id' => $this->session->user_id,
+            'status' => true,
+            'archive' => true,
+        ];
+        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if(isset($this->session->user_id))
+        {
+            return view('note-list', $data);
+        }
+        else
+        {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
+    /**
+     * @method - trash_list()
+     * @return - login/notes-list view
+     * @descrition
+     * Method to get notes-list
+     * Getting list from notes table and return output in array format
+     */
+    public function trash_list()
+    {
+        $notes_obj = new NotesModel();
+        $notes_by=[
+            'user_id' => $this->session->user_id,
+            'status' => false,
         ];
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
@@ -182,5 +282,79 @@ class NotesController extends Controller
         ];
         $data['note'] = $notes_obj->where($delete_by)->delete();
         return $this->response->redirect(site_url('/notes-list'));
-    } 
+    }
+    /**
+     * @method - set_archive()
+     * @description
+     * Method to set an note as archive note
+     */
+    public function set_archive(){
+        $notes_obj = new NotesModel();
+        $id = $this->request->getVar('note_id');
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $data = [
+            'archive'  => true,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        $notes_obj->update($update_by, $data);
+    }
+    /**
+     * @method - unset_archive()
+     * @description
+     * Method to set an note as archive note
+     */
+    public function unset_archive(){
+        $notes_obj = new NotesModel();
+        $id = $this->request->getVar('note_id');
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $data = [
+            'archive'  => false,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        $notes_obj->update($update_by, $data);
+    }
+
+    /**
+     * @method - restore_note()
+     * @description
+     * Method to set an note as archive note
+     */
+    public function trash_note(){
+        $notes_obj = new NotesModel();
+        $id = $this->request->getVar('note_id');
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $data = [
+            'status'  => false,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        $notes_obj->update($update_by, $data);
+    }
+
+    /**
+     * @method - restore_note()
+     * @description
+     * Method to set an note as archive note
+     */
+    public function restore_note(){
+        $notes_obj = new NotesModel();
+        $id = $this->request->getVar('note_id');
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $data = [
+            'status'  => true,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        $notes_obj->update($update_by, $data);
+    }
 }
