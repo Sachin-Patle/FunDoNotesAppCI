@@ -3,12 +3,12 @@
     $i = 1;
     foreach ($notes as $note) { ?>
         <div class="col-md-4" id="note<?php echo $note['id']; ?>">
-            <div class="card ibox">
+            <div id="note_card<?php echo $note['id']; ?>" class="card ibox" style="background-color:<?php echo $note['color']; ?>;">
                 <div class="ibox-head">
                     <div class="ibox-title"><?php echo $note['title']; ?></div>
                     <div class="ibox-tools">
                         <!-- <a class="ibox-collapse"><i class="fa fa-thumb-tack"></i></a> -->
-                        <a class="ibox-collapse"><i class="ti-pin2"></i></a>
+                        <a class="ibox-collapse" title="Pin"><i class="ti-pin2"></i></a>
                     </div>
                 </div>
                 <div class="card-body ibox-body">
@@ -16,29 +16,31 @@
                     <p><?php echo $note['note']; ?></p>
 
                 </div>
-                <div class="ibox-footer">
+                <div class="modal-footer">
                     <div class="float-right">
                         <?php
                         if ($note['status'] == 1) {
                         ?>
+                            <input style="height:35px;" type="color" title="Change color" id="change_color<?php echo $note['id']; ?>" value="<?php echo $note['color']; ?>" class="btn btn-default btn-rounded">
+                            <button data-toggle="modal" title="Add image" data-target="#imageModal<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="fa fa-image"></i></button>
                             <?php
                             if ($note['archive'] == 0) {
                             ?>
-                                <button title="Archive" id="archive_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-info btn-sm"><i class="fa fa-archive"></i></button>
+                                <button title="Archive" id="archive_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="fa fa-archive"></i></button>
                             <?php
                             } else {
                             ?>
-                                <button title="Unarchive" id="unarchive_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-info btn-sm"><i class="ti-archive"></i></button>
+                                <button title="Unarchive" id="unarchive_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="ti-archive"></i></button>
                             <?php
                             }
                             ?>
-                            <button data-toggle="modal" data-target="#editModal<?php echo $note['id']; ?>" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i></button>
-                            <button title="Move to trash" id="trash_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                            <button data-toggle="modal" title="Edit" data-target="#editModal<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="fa fa-pencil"></i></button>
+                            <button title="Move to trash" id="trash_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="fa fa-trash"></i></button>
                         <?php
                         } else {
                         ?>
-                            <button title="Restore" id="restore_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-success btn-sm"><i class="fa fa-recycle"></i></button>
-                            <button data-toggle="modal" data-target="#deleteModal<?php echo $note['id']; ?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                            <button title="Restore" id="restore_note<?php echo $note['id']; ?>" value="<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="fa fa-recycle"></i></button>
+                            <button data-toggle="modal" title="Delete" data-target="#deleteModal<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="fa fa-trash"></i></button>
                         <?php
                         }
                         ?>
@@ -84,7 +86,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Are you sure want to delete ?</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Are you sure want to permanently delete this ?</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -159,10 +161,18 @@
                     restore_note(this.value);
                 });
                 /**
+                 * Method when select color from color picker
+                 */
+                $("#change_color<?php echo $note['id']; ?>").change(function(event) {
+                    // Prevent the form from submitting via the browser.
+                    event.preventDefault();
+                    change_color(this.value, <?php echo $note['id']; ?>);
+                });
+                /**
                  * @method - update_note
                  * @description
                  * Method to update note details
-                 * Getting form data by form id and updating changes according to ObjectId by using ajax
+                 * Getting form data by form id and updating changes according to id by using ajax
                  */
                 function update_note() {
                     var form_data = $('#form_edit<?php echo $note['id']; ?>').serialize();
@@ -177,7 +187,6 @@
                             $("#note<?php echo $note['id']; ?>").html(result);
                         },
                         error: function() {
-                            // some error handling part
                             alert("Failed to update note");
                         }
                     });
@@ -185,8 +194,8 @@
                 /**
                  * @method - delete_note
                  * @description
-                 * Method to update note details
-                 * Getting form data by form id and updating changes according to ObjectId by using ajax
+                 * Method to delete note details
+                 * Getting form data by form id and updating changes according to id by using ajax
                  */
                 function delete_note() {
                     var form_data = $('#form_delete<?php echo $note['id']; ?>').serialize();
@@ -199,10 +208,8 @@
                             $("#note<?php echo $note['id']; ?>").remove();
                             $("#form_delete<?php echo $note['id']; ?>")[0].reset();
                             $("#deleteModal<?php echo $note['id']; ?>").modal('toggle');
-                            // $("#note<?php echo $note['id']; ?>").remove(); 
                         },
                         error: function() {
-                            // some error handling part
                             alert("Failed to delete note");
                         }
                     });
@@ -210,9 +217,10 @@
 
                 /**
                  * @method - set_archive
+                 * @param - id
                  * @description
-                 * Method to update note details
-                 * Getting form data by form id and updating changes according to ObjectId by using ajax
+                 * Method to set note as archive note
+                 * Getting id by param and setting note as archive by using ajax
                  */
                 function set_archive(id) {
 
@@ -226,17 +234,17 @@
                             $("#note<?php echo $note['id']; ?>").remove();
                         },
                         error: function() {
-                            // some error handling part
-                            alert("Failed to delete note");
+                            alert("Failed to archive note");
                         }
                     });
                 }
 
                 /**
-                 * @method - set_archive
+                 * @method - unset_archive
                  * @description
-                 * Method to update note details
-                 * Getting form data by form id and updating changes according to ObjectId by using ajax
+                 * @param - id
+                 * Method to unarchive note
+                 * Getting id from params and removing notes from archive according to ObjectId by using ajax
                  */
                 function unset_archive(id) {
 
@@ -250,8 +258,31 @@
                             $("#note<?php echo $note['id']; ?>").remove();
                         },
                         error: function() {
-                            // some error handling part
-                            alert("Failed to delete note");
+                            alert("Failed to unarchive note");
+                        }
+                    });
+                }
+
+                /**
+                 * @method - trash_note
+                 * @description
+                 * @param - id
+                 * Method to move note to trash
+                 * Getting id and moving note to trash according to id by using ajax
+                 */
+                function trash_note(id) {
+
+                    $.ajax({
+                        url: "<?= site_url('/trash-note') ?>",
+                        method: "POST",
+                        data: {
+                            note_id: id
+                        },
+                        success: function(data) {
+                            $("#note<?php echo $note['id']; ?>").remove();
+                        },
+                        error: function() {
+                            alert("Failed to trash note");
                         }
                     });
                 }
@@ -259,8 +290,9 @@
                 /**
                  * @method - restore_note
                  * @description
-                 * Method to update note details
-                 * Getting form data by form id and updating changes according to ObjectId by using ajax
+                 * @param - id
+                 * Method to restore note from trash
+                 * Getting id and restoring note from trash according to id by using ajax
                  */
                 function restore_note(id) {
 
@@ -281,25 +313,27 @@
                 }
 
                 /**
-                 * @method - trash_note
+                 * @method - change_color
                  * @description
-                 * Method to update note details
-                 * Getting form data by form id and updating changes according to ObjectId by using ajax
+                 * @param - id, color
+                 * Method to change note background color
+                 * Getting color from color picker and updating changes according to id by using ajax
                  */
-                function trash_note(id) {
+                function change_color(color, id) {
 
                     $.ajax({
-                        url: "<?= site_url('/trash-note') ?>",
+                        url: "<?= site_url('/change-color') ?>",
                         method: "POST",
                         data: {
-                            note_id: id
+                            note_id: id,
+                            color: color
                         },
                         success: function(data) {
-                            $("#note<?php echo $note['id']; ?>").remove();
+                            $("#note_card<?php echo $note['id']; ?>").css("background-color", color);
+                            // $("#change_color<?php echo $note['id']; ?>").css("background-color", color);
                         },
                         error: function() {
-                            // some error handling part
-                            alert("Failed to delete note");
+                            alert("Failed to change color");
                         }
                     });
                 }

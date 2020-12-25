@@ -65,6 +65,8 @@ $routes->get('archive-list', 'NotesController::archive_list');
 $routes->get('trash-list', 'NotesController::trash_list');
 $routes->post('trash-note', 'NotesController::trash_note');
 $routes->post('restore-note', 'NotesController::restore_note');
+$routes->post('empty-trash', 'NotesController::empty_trash');
+$routes->post('change-color', 'NotesController::change_color');
 
 /**
  * Routes of LabelsController class 

@@ -23,6 +23,28 @@
         </div>
         <form id="login-form" action="<?= site_url('/user_login') ?>" method="post">
             <h2 class="login-title">Log in</h2>
+            <?php
+            if(isset($_SESSION['success']))
+            {
+                ?>
+            <div class="alert alert-success alert-dismissable fade show">
+                <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Success!</strong> <?php echo $_SESSION['success'];?> 
+            </div>
+            <?php
+            unset($_SESSION['success']);
+            }
+            ?>
+            <?php
+            if(isset($_SESSION['error']))
+            {
+                ?>
+            <div class="alert alert-danger alert-dismissable fade show">
+                <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Oops!</strong> <?php echo $_SESSION['error'];?> 
+            </div>
+            <?php
+            unset($_SESSION['error']);
+            }
+            ?>
             <div class="form-group">
                 <div class="input-group-icon right">
                     <div class="input-icon"><i class="fa fa-envelope"></i></div>

@@ -1,5 +1,7 @@
-<?php 
+<?php
+
 namespace App\Controllers;
+
 use App\Models\NotesModel;
 use CodeIgniter\Controller;
 
@@ -26,12 +28,9 @@ class NotesController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('notes');
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -48,12 +47,9 @@ class NotesController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('archive');
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -70,12 +66,9 @@ class NotesController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('trash');
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -88,20 +81,17 @@ class NotesController extends Controller
      */
     public function single_note()
     {
-        $post_data=[
+        $note_by = [
             "id" => $this->request->getVar('id'),
         ];
         $notes_obj = new NotesModel();
-        $data['single_note'] = $notes_obj->where($post_data)->first();
+        $data['notes'] = $notes_obj->where($note_by)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
-            return view('single-note', $data);
-        }
-        else
-        {
+        if (isset($this->session->user_id)) {
+            return view('note-list', $data);
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -116,7 +106,7 @@ class NotesController extends Controller
     public function notes_list()
     {
         $notes_obj = new NotesModel();
-        $notes_by=[
+        $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => true,
             'archive' => false,
@@ -125,12 +115,9 @@ class NotesController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('note-list', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -145,7 +132,7 @@ class NotesController extends Controller
     public function archive_list()
     {
         $notes_obj = new NotesModel();
-        $notes_by=[
+        $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => true,
             'archive' => true,
@@ -154,12 +141,9 @@ class NotesController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('note-list', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -173,7 +157,7 @@ class NotesController extends Controller
     public function trash_list()
     {
         $notes_obj = new NotesModel();
-        $notes_by=[
+        $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => false,
         ];
@@ -181,12 +165,9 @@ class NotesController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('note-list', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -201,7 +182,7 @@ class NotesController extends Controller
     public function notes_list_by_label()
     {
         $notes_obj = new NotesModel();
-        $notes_by=[
+        $notes_by = [
             'user_id' => $this->session->user_id,
             'label_id' => $this->request->getVar('label_id'),
             'status' => true,
@@ -211,22 +192,20 @@ class NotesController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('note-list', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
- 
+
     /**
      * @method - save_note()
      * @description
      * Method to get inputs by post and inserts data into notes table
      */
-    public function save_note() {
+    public function save_note()
+    {
         $notes_obj = new NotesModel();
         $data = [
             'user_id' => $this->session->user_id,
@@ -250,7 +229,8 @@ class NotesController extends Controller
      * @description
      * Method to get inputs by post and update data according to id
      */
-    public function update_note(){
+    public function update_note()
+    {
         $notes_obj = new NotesModel();
         $id = $this->request->getVar('note_id');
         $update_by = [
@@ -267,14 +247,15 @@ class NotesController extends Controller
         $data['updated_note'] = $notes_obj->where('id', $id)->first();
         return view('updated-note', $data);
     }
- 
+
     /**
      * @method - delete_note()
      * @return - notes-list view
      * @description
      * Method to get input by get and delete data according to id
      */
-    public function delete_note(){
+    public function delete_note()
+    {
         $notes_obj = new NotesModel();
         $delete_by = [
             'id' => $this->request->getVar('note_id'),
@@ -288,7 +269,8 @@ class NotesController extends Controller
      * @description
      * Method to set an note as archive note
      */
-    public function set_archive(){
+    public function set_archive()
+    {
         $notes_obj = new NotesModel();
         $id = $this->request->getVar('note_id');
         $update_by = [
@@ -304,9 +286,10 @@ class NotesController extends Controller
     /**
      * @method - unset_archive()
      * @description
-     * Method to set an note as archive note
+     * Method to unset an note from archive note
      */
-    public function unset_archive(){
+    public function unset_archive()
+    {
         $notes_obj = new NotesModel();
         $id = $this->request->getVar('note_id');
         $update_by = [
@@ -321,11 +304,12 @@ class NotesController extends Controller
     }
 
     /**
-     * @method - restore_note()
+     * @method - trash_note()
      * @description
-     * Method to set an note as archive note
+     * Method to move note to trash
      */
-    public function trash_note(){
+    public function trash_note()
+    {
         $notes_obj = new NotesModel();
         $id = $this->request->getVar('note_id');
         $update_by = [
@@ -342,9 +326,10 @@ class NotesController extends Controller
     /**
      * @method - restore_note()
      * @description
-     * Method to set an note as archive note
+     * Method to restore note from trash
      */
-    public function restore_note(){
+    public function restore_note()
+    {
         $notes_obj = new NotesModel();
         $id = $this->request->getVar('note_id');
         $update_by = [
@@ -354,6 +339,39 @@ class NotesController extends Controller
         $data = [
             'status'  => true,
             'updated' => date('d-m-y h:i:s'),
+        ];
+        $notes_obj->update($update_by, $data);
+    }
+
+    /**
+     * @method - empty_trash()
+     * @description
+     * Method to move note to trash by id
+     */
+    public function empty_trash()
+    {
+        $notes_obj = new NotesModel();
+        $delete_by = [
+            'user_id' => $this->session->user_id,
+            'status' => false,
+        ];
+        $data['note'] = $notes_obj->where($delete_by)->delete();
+    }
+
+    /**
+     * @method - change_color()
+     * @description
+     * Method to change note background color
+     */
+    public function change_color()
+    {
+        $notes_obj = new NotesModel();
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $data = [
+            'color' => $this->request->getVar('color'),
         ];
         $notes_obj->update($update_by, $data);
     }

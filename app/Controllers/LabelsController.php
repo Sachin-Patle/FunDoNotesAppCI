@@ -1,5 +1,7 @@
-<?php 
+<?php
+
 namespace App\Controllers;
+
 use App\Models\LabelsModel;
 use CodeIgniter\Controller;
 
@@ -28,12 +30,9 @@ class LabelsController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('labels', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -46,7 +45,7 @@ class LabelsController extends Controller
      */
     public function single_label()
     {
-        $post_data=[
+        $post_data = [
             "id" => $this->request->getVar('id'),
         ];
         $labels_obj = new LabelsModel();
@@ -54,12 +53,9 @@ class LabelsController extends Controller
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('single-label', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -74,16 +70,13 @@ class LabelsController extends Controller
     public function labels_list()
     {
         $labels_obj = new LabelsModel();
-        $data['labels'] = $labels_obj->where('user_id',$this->session->user_id)->findAll();
+        $data['labels'] = $labels_obj->where('user_id', $this->session->user_id)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('label-list', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
@@ -98,26 +91,24 @@ class LabelsController extends Controller
     public function labels_list_on_form()
     {
         $labels_obj = new LabelsModel();
-        $data['labels'] = $labels_obj->where('user_id',$this->session->user_id)->findAll();
+        $data['labels'] = $labels_obj->where('user_id', $this->session->user_id)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
-        if(isset($this->session->user_id))
-        {
+        if (isset($this->session->user_id)) {
             return view('label-list-on-form', $data);
-        }
-        else
-        {
+        } else {
             return $this->response->redirect(site_url('/login'));
         }
     }
- 
+
     /**
      * @method - save_label()
      * @description
      * Method to get inputs by post and inserts data into labels table
      */
-    public function save_label() {
+    public function save_label()
+    {
         $labels_obj = new LabelsModel();
         $data = [
             'user_id' => $this->session->user_id,
@@ -138,7 +129,8 @@ class LabelsController extends Controller
      * @description
      * Method to get inputs by post and update data according to id
      */
-    public function update_label(){
+    public function update_label()
+    {
         $labels_obj = new LabelsModel();
         $id = $this->request->getVar('label_id');
         $update_by = [
@@ -154,14 +146,15 @@ class LabelsController extends Controller
         // $data['updated_label'] = $labels_obj->where('id', $id)->first();
         // return view('updated-label', $data);
     }
- 
+
     /**
      * @method - delete_label()
      * @return - labels-list view
      * @description
      * Method to get input by get and delete data according to id
      */
-    public function delete_label(){
+    public function delete_label()
+    {
         $labels_obj = new LabelsModel();
         $delete_by = [
             'id' => $this->request->getVar('label_id'),
@@ -169,5 +162,5 @@ class LabelsController extends Controller
         ];
         $data['label'] = $labels_obj->where($delete_by)->delete();
         return $this->response->redirect(site_url('/labels-list'));
-    } 
+    }
 }
