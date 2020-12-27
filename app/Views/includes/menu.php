@@ -9,11 +9,11 @@
                         <div class="font-strong"><?php echo $_SESSION['user_name'];?></div><small><?php echo $_SESSION['user_email'];?></small></div>
                 </div>
                 <ul class="side-menu metismenu">
-                    <li>
+                    <!-- <li>
                         <a href="<?= site_url('/notes') ?>"><i class="sidebar-item-icon fa fa-th-large"></i>
                             <span class="nav-label">Dashboard</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="heading">FEATURES</li>
                     <li>
                         <a href="<?= site_url('/notes') ?>"><i class="sidebar-item-icon ti-light-bulb"></i>
@@ -21,14 +21,17 @@
                         </a>
                     </li>
                     <li>
-                        <!-- <a href="<?= site_url('/labels') ?>"><i class="sidebar-item-icon fa fa-pencil"></i>
-                            <span class="nav-label">Edit Labels</span> -->
                             <a href="" data-toggle="modal" data-target="#labelModal"><i class="sidebar-item-icon fa fa-pencil"></i>
                             <span class="nav-label">Edit Labels</span>
                         </a>
                     </li>
                     <li id="label_list">
                         
+                    </li>
+                    <li>
+                        <a href="<?= site_url('/pinned') ?>"><i class="sidebar-item-icon fa fa-thumb-tack"></i>
+                            <span class="nav-label">Pinned</span>
+                        </a>
                     </li>
                     <li>
                         <a href="<?= site_url('/archive') ?>"><i class="sidebar-item-icon fa fa-archive"></i>

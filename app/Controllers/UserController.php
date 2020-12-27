@@ -47,6 +47,7 @@ class UserController extends Controller
      */
     public function user_registration()
     {
+        
         $user_obj = new UserModel();
         if (!empty($user_obj->where('email', $this->request->getVar('email'))->first())) {
             $response_msg = [
@@ -68,22 +69,16 @@ class UserController extends Controller
             /**
              * Sending Registration Mail
              */
+            $user_name = $this->request->getVar('first_name');
+            $user_pass = $this->request->getVar('password');
             $user_email = $this->request->getVar('email');
-            $message = "Thanks for Registration ";
+            $message = "<h3><b>Welcome to FunDoNotes</b></h3><p>Dear $user_name, Thanks for Registration..<br>Your login credentials are :<br><b>Username :</b> $user_email <br> <b> Password :</b>  $user_pass <br>Please do note share it with anyone..</p>";
             $email = \Config\Services::email();
             $email->setFrom('sachinpatlestech@gmail.com', 'Sachin');
             $email->setTo($user_email);
-            $email->setSubject('Test | FundoNotes');
+            $email->setSubject('FundoNotes | Registration Successfull');
             $email->setMessage($message); //your message here
-            $result = $email->send();
-            // if($email->send(false))
-            // {
-            //     $result=$email->printDebugger(['headers']);
-            // }
-            // else
-            // {
-            //     $result="Sent";
-            // }
+            $email->send();
 
             $response_msg = [
                 'success' => 'Registration Successfull',

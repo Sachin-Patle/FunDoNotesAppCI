@@ -14,7 +14,7 @@
 # ENVIRONMENT
 #--------------------------------------------------------------------
 
-# CI_ENVIRONMENT = development
+CI_ENVIRONMENT = development
 
 #--------------------------------------------------------------------
 # APP
@@ -99,3 +99,10 @@
 # honeypot.name = 'honeypot'
 # honeypot.template = '<label>{label}</label><input type="text" name="{name}" value=""/>'
 # honeypot.container = '<div style="display:none">{template}</div>'
+email_config_protocol = 'smtp'
+email_config_SMTPHost = 'smtp.gmail.com'
+email_config_SMTPPort = 465
+email_config_SMTPUser = 'sachinpatlestech@gmail.com'
+email_config_SMTPPass = '123456'
+email_config_senderMail = 'sachinpatlestech@gmail.com'
+email_config_senderName = 'FunDoNotes'

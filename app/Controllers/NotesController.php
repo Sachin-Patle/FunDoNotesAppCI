@@ -55,6 +55,25 @@ class NotesController extends Controller
     }
 
     /**
+     * @method - pinned()
+     * @return - login/notes-list view
+     * @descrition
+     * Method to get notes-list
+     * Getting list from notes table and return output in array format
+     */
+    public function pinned()
+    {
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if (isset($this->session->user_id)) {
+            return view('pinned-notes');
+        } else {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
+
+    /**
      * @method - trash()
      * @return - login/trash-notes-list view
      * @descrition
@@ -160,6 +179,32 @@ class NotesController extends Controller
         $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => false,
+        ];
+        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        /**
+         * Checking user_id is empty or not if yes it throws back to login page
+         */
+        if (isset($this->session->user_id)) {
+            return view('note-list', $data);
+        } else {
+            return $this->response->redirect(site_url('/login'));
+        }
+    }
+
+    /**
+     * @method - pinned_notes()
+     * @return - login/notes-list view
+     * @descrition
+     * Method to get notes-list
+     * Getting list from notes table and return output in array format
+     */
+    public function pinned_notes()
+    {
+        $notes_obj = new NotesModel();
+        $notes_by = [
+            'user_id' => $this->session->user_id,
+            'status' => true,
+            'pin' => true,
         ];
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
@@ -374,5 +419,45 @@ class NotesController extends Controller
             'color' => $this->request->getVar('color'),
         ];
         $notes_obj->update($update_by, $data);
+    }
+    /**
+     * @method - change_image()
+     * @description
+     * Method to change note background color
+     */
+    public function change_image()
+    {
+        $notes_obj = new NotesModel();
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $note_info = $notes_obj->where($update_by)->first();
+        helper(['form', 'url']);
+         
+        $image_file = $this->validate([
+            'file' => [
+                'uploaded[file]',
+                'mime_in[file,image/jpg,image/jpeg,image/png]',
+                'max_size[file,1024]',
+            ]
+        ]);
+    
+        if (!$image_file) {
+            print_r('Choose a valid file');
+        } else {
+            $image = $this->request->getFile('file');
+            $new_file_name=str_replace(' ','-',$note_info['title']).date("d-m-Y_h-i-s-A").".".$image->getExtension();
+            $image->move(WRITEPATH . 'temp', $new_file_name);
+    
+            $data = [
+               'image' =>  $image->getName(),
+            ];
+            $notes_obj->update($update_by, $data);
+
+            print_r('File has successfully uploaded');
+            return $this->response->redirect(site_url('/notes'));
+        }
+        // $notes_obj->update($update_by, $data);
     }
 }

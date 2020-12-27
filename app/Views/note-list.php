@@ -1,19 +1,41 @@
 <?php if ($notes) { ?>
     <?php
     $i = 1;
-    foreach ($notes as $note) { ?>
+    foreach ($notes as $note) {
+        $image=WRITEPATH."temp\\".$note['image'];
+         ?>
         <div class="col-md-4" id="note<?php echo $note['id']; ?>">
             <div id="note_card<?php echo $note['id']; ?>" class="card ibox" style="background-color:<?php echo $note['color']; ?>;">
+            <?php
+            if(!empty($note['image']))
+            {
+                ?>
+            <img class="card-img-top" src="<?php echo $image; ?>" />
+            <?php
+            }
+            ?>
                 <div class="ibox-head">
                     <div class="ibox-title"><?php echo $note['title']; ?></div>
                     <div class="ibox-tools">
-                        <!-- <a class="ibox-collapse"><i class="fa fa-thumb-tack"></i></a> -->
-                        <a class="ibox-collapse" title="Pin"><i class="ti-pin2"></i></a>
+                        <?php
+                        if($note['pin']==0)
+                        {
+                            ?>
+                        <a id="pin<?php echo $note['id']; ?>" class="ibox-collapse" title="Pin"><i class="ti-pin2"></i></a>
+                        <?php
+                        }
+                        else
+                        {
+                        ?>
+                        <a id="unpin<?php echo $note['id']; ?>" title="Unpin" class="ibox-collapse"><i class="fa fa-thumb-tack"></i></a>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </div>
                 <div class="card-body ibox-body">
 
-                    <p><?php echo $note['note']; ?></p>
+                    <p><?php echo $note['note']; ?> </p>
 
                 </div>
                 <div class="modal-footer">
@@ -81,6 +103,34 @@
         </div>
         <!-- End Modal -->
 
+        <!-- editModal -->
+        <div class="modal fade" id="imageModal<?php echo $note['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="<?= site_url('/change-image') ?>" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Select Image</label>
+                                <input type="hidden" name="note_id" value="<?php echo $note['id']; ?>">
+                                <input type="file" name="file" class="form-control" accept="image/*" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeSubmit"><i class="fa fa-times"></i> Close</button>
+                            <button type="submit" name="updateTmage" class="btn btn-info"><i class="fa fa-upload"></i> Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+
         <!-- deleteModal -->
         <div class="modal fade" id="deleteModal<?php echo $note['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -116,6 +166,15 @@
                     // Prevent the form from submitting via the browser.
                     event.preventDefault();
                     update_note();
+                    get_notes();
+                });
+                /**
+                 * Method when submitting form to update note details
+                 */
+                $("#form_image<?php echo $note['id']; ?>").submit(function(event) {
+                    // Prevent the form from submitting via the browser.
+                    event.preventDefault();
+                    update_image();
                     get_notes();
                 });
                 /**
@@ -185,6 +244,30 @@
                             $("#form_edit<?php echo $note['id']; ?>")[0].reset();
                             $("#editModal<?php echo $note['id']; ?>").modal('toggle');
                             $("#note<?php echo $note['id']; ?>").html(result);
+                        },
+                        error: function() {
+                            alert("Failed to update note");
+                        }
+                    });
+                }
+                /**
+                 * @method - update_image
+                 * @description
+                 * Method to update note details
+                 * Getting form data by form id and updating changes according to id by using ajax
+                 */
+                function update_image() {
+                    var form_data = $('#form_image<?php echo $note['id']; ?>').serialize();
+
+                    $.ajax({
+                        url: "<?= site_url('/change-image') ?>",
+                        method: "POST",
+                        data: form_data,
+                        success: function(result) {
+                            alert(result);
+                            // $("#form_edit<?php echo $note['id']; ?>")[0].reset();
+                            // $("#editModal<?php echo $note['id']; ?>").modal('toggle');
+                            // $("#note<?php echo $note['id']; ?>").html(result);
                         },
                         error: function() {
                             alert("Failed to update note");
