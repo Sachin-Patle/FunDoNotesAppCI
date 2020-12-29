@@ -9,12 +9,12 @@ class Email extends BaseConfig
 	/**
 	 * @var string
 	 */
-	public $fromEmail;
+	public $fromEmail=SMTP_SENDER_MAIL;
 
 	/**
 	 * @var string
 	 */
-	public $fromName;
+	public $fromName=SMTP_SENDER_NAME;
 
 	/**
 	 * @var string
@@ -33,7 +33,7 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $protocol = 'smtp';
+	public $protocol = SMTP_PROTOCOL;
 
 	/**
 	 * The server path to Sendmail.
@@ -47,28 +47,28 @@ class Email extends BaseConfig
 	 *
 	 * @var string
 	 */
-	public $SMTPHost= 'smtp.gmail.com';
+	public $SMTPHost= SMTP_HOST;
 
 	/**
 	 * SMTP Username
 	 *
 	 * @var string
 	 */
-	public $SMTPUser='sachinpatlestech@gmail.com';
+	public $SMTPUser=SMTP_USER;
 
 	/**
 	 * SMTP Password
 	 *
 	 * @var string
 	 */
-	public $SMTPPass='12345';
+	public $SMTPPass=SMTP_PASS;
 
 	/**
 	 * SMTP Port
 	 *
 	 * @var integer
 	 */
-	public $SMTPPort = '465';
+	public $SMTPPort = SMTP_PORT;
 
 	/**
 	 * SMTP Timeout (in seconds)

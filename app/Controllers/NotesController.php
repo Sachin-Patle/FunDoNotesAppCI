@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\NotesModel;
+use App\Models\ColorsModel;
 use CodeIgniter\Controller;
 
 class NotesController extends Controller
@@ -125,12 +126,15 @@ class NotesController extends Controller
     public function notes_list()
     {
         $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
         $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => true,
             'archive' => false,
+            'trash' => false,
         ];
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
@@ -151,11 +155,14 @@ class NotesController extends Controller
     public function archive_list()
     {
         $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
         $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => true,
             'archive' => true,
+            'trash' => false,
         ];
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
@@ -176,10 +183,13 @@ class NotesController extends Controller
     public function trash_list()
     {
         $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
         $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => false,
+            'trash' => false,
         ];
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
@@ -201,11 +211,14 @@ class NotesController extends Controller
     public function pinned_notes()
     {
         $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
         $notes_by = [
             'user_id' => $this->session->user_id,
             'status' => true,
             'pin' => true,
+            'trash' => false,
         ];
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
@@ -227,12 +240,15 @@ class NotesController extends Controller
     public function notes_list_by_label()
     {
         $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
         $notes_by = [
             'user_id' => $this->session->user_id,
             'label_id' => $this->request->getVar('label_id'),
             'status' => true,
             'archive' => false,
+            'trash' => false,
         ];
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         $data['notes'] = $notes_obj->where($notes_by)->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
@@ -277,6 +293,7 @@ class NotesController extends Controller
     public function update_note()
     {
         $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
         $id = $this->request->getVar('note_id');
         $update_by = [
             'id' => $this->request->getVar('note_id'),
@@ -289,6 +306,7 @@ class NotesController extends Controller
         ];
         $notes_obj->update($update_by, $data);
 
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         $data['updated_note'] = $notes_obj->where('id', $id)->first();
         return view('updated-note', $data);
     }
@@ -306,7 +324,12 @@ class NotesController extends Controller
             'id' => $this->request->getVar('note_id'),
             'user_id' => $this->session->user_id,
         ];
-        $data['note'] = $notes_obj->where($delete_by)->delete();
+        $data = [
+            'trash'  => true,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        // $data['note'] = $notes_obj->where($delete_by)->delete();
+        $notes_obj->update($delete_by, $data);
         return $this->response->redirect(site_url('/notes-list'));
     }
     /**
@@ -346,6 +369,54 @@ class NotesController extends Controller
             'updated' => date('d-m-y h:i:s'),
         ];
         $notes_obj->update($update_by, $data);
+    }
+
+    /**
+     * @method - set_pin()
+     * @description
+     * Method to set an note as pin note
+     */
+    public function set_pin()
+    {
+        $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
+        $id = $this->request->getVar('note_id');
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $data = [
+            'pin'  => true,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        $notes_obj->update($update_by, $data);
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
+        $data['updated_note'] = $notes_obj->where('id', $id)->first();
+        return view('updated-note', $data);
+    }
+
+    /**
+     * @method - unset_pin()
+     * @description
+     * Method to unpin note
+     */
+    public function unset_pin()
+    {
+        $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
+        $id = $this->request->getVar('note_id');
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $data = [
+            'pin'  => false,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        $notes_obj->update($update_by, $data);
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
+        $data['updated_note'] = $notes_obj->where('id', $id)->first();
+        return view('updated-note', $data);
     }
 
     /**
@@ -400,7 +471,12 @@ class NotesController extends Controller
             'user_id' => $this->session->user_id,
             'status' => false,
         ];
-        $data['note'] = $notes_obj->where($delete_by)->delete();
+        $data = [
+            'trash' => true,
+            'updated' => date('d-m-y h:i:s'),
+        ];
+        // $data['note'] = $notes_obj->where($delete_by)->delete();
+        $notes_obj->update($delete_by, $data);
     }
 
     /**
@@ -428,13 +504,14 @@ class NotesController extends Controller
     public function change_image()
     {
         $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
         $update_by = [
             'id' => $this->request->getVar('note_id'),
             'user_id'  => $this->session->user_id,
         ];
         $note_info = $notes_obj->where($update_by)->first();
         helper(['form', 'url']);
-         
+
         $image_file = $this->validate([
             'file' => [
                 'uploaded[file]',
@@ -442,22 +519,54 @@ class NotesController extends Controller
                 'max_size[file,1024]',
             ]
         ]);
-    
+
         if (!$image_file) {
             print_r('Choose a valid file');
         } else {
+            if (!empty($note_info['image']) && file_exists(FCPATH."/temp/". $note_info['image'])) {
+                $path = FCPATH."/temp/". $note_info['image'];
+                unlink(FCPATH."/temp/". $note_info['image']);
+            }
             $image = $this->request->getFile('file');
-            $new_file_name=str_replace(' ','-',$note_info['title']).date("d-m-Y_h-i-s-A").".".$image->getExtension();
-            $image->move(WRITEPATH . 'temp', $new_file_name);
-    
+            $new_file_name = str_replace(' ', '-', $note_info['title']) . date("d-m-Y_h-i-s-A") . "." . $image->getExtension();
+            $image->move(FCPATH . 'temp', $new_file_name);
+
             $data = [
-               'image' =>  $image->getName(),
+                'image' =>  $image->getName(),
             ];
             $notes_obj->update($update_by, $data);
-
-            print_r('File has successfully uploaded');
-            return $this->response->redirect(site_url('/notes'));
+            $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
+            $data['updated_note'] = $notes_obj->where('id', $this->request->getVar('note_id'))->first();
+            return view('updated-note', $data);
         }
-        // $notes_obj->update($update_by, $data);
+    }
+
+    /**
+     * @method - remove_image()
+     * @description
+     * Method to change note background color
+     */
+    public function remove_image()
+    {
+        $notes_obj = new NotesModel();
+        $color_obj = new ColorsModel();
+        $update_by = [
+            'id' => $this->request->getVar('note_id'),
+            'user_id'  => $this->session->user_id,
+        ];
+        $note_info = $notes_obj->where($update_by)->first();
+        
+        if (!empty($note_info['image']) && file_exists(FCPATH."/temp/". $note_info['image'])) {
+                $path = FCPATH."/temp/". $note_info['image'];
+                unlink(FCPATH."/temp/". $note_info['image']);
+            }
+
+            $data = [
+                'image' =>  '',
+            ];
+            $notes_obj->update($update_by, $data);
+            $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
+            $data['updated_note'] = $notes_obj->where('id', $this->request->getVar('note_id'))->first();
+            return view('updated-note', $data);
     }
 }

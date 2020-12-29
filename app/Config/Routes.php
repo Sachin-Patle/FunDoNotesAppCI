@@ -62,6 +62,8 @@ $routes->post('delete-note', 'NotesController::delete_note');
 $routes->post('update-note', 'NotesController::update_note');
 $routes->post('set-archive', 'NotesController::set_archive');
 $routes->post('unset-archive', 'NotesController::unset_archive');
+$routes->post('set-pin', 'NotesController::set_pin');
+$routes->post('unset-pin', 'NotesController::unset_pin');
 $routes->get('archive-list', 'NotesController::archive_list');
 $routes->get('trash-list', 'NotesController::trash_list');
 $routes->get('pinned-notes', 'NotesController::pinned_notes');
@@ -70,6 +72,7 @@ $routes->post('restore-note', 'NotesController::restore_note');
 $routes->post('empty-trash', 'NotesController::empty_trash');
 $routes->post('change-color', 'NotesController::change_color');
 $routes->post('change-image', 'NotesController::change_image');
+$routes->post('remove-image', 'NotesController::remove_image');
 
 /**
  * Routes of LabelsController class 

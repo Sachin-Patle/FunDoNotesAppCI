@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
-    <title>FunDoNotes</title>
+    <title>FunDooNotes</title>
     <!-- GLOBAL MAINLY STYLES-->
     <link href="<?php echo base_url('/assets/vendors/bootstrap/dist/css/bootstrap.min.css');?>" rel="stylesheet" />
     <link href="<?php echo base_url('/assets/vendors/font-awesome/css/font-awesome.min.css');?>" rel="stylesheet" />
@@ -25,7 +25,7 @@
         <header class="header">
             <div class="page-brand">
                 <a class="link" href="">
-                    <span class="brand">FunDo
+                    <span class="brand">FunDoo
                         <span class="brand-tip">Notes</span>
                     </span>
                     <span class="brand-mini">FN</span>

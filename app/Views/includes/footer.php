@@ -3,7 +3,7 @@
 
 
 <footer class="page-footer">
-        <div class="font-13">2020 © <b>FunDoNotes</b> - All rights reserved.</div>
+        <div class="font-13">2020 © <b>FunDooNotes</b> - All rights reserved.</div>
         <div class="to-top"><i class="fa fa-angle-double-up"></i></div>
     </footer>
 </div>

@@ -11,7 +11,7 @@
             <div class="input-group-btn">
                     <button class="btn btn-danger" id="delete_label<?php echo $label['id'];?>" type="button"><i class="fa fa-trash"></i></button>
                 </div>
-                <input class="form-control" type="text" name="label_name" id="label_name<?php echo $label['id']; ?>" placeholder="Label Title" value="<?php echo $label['label_name']; ?>" required>
+                <input class="form-control" type="text" name="label_name" id="label_name<?php echo $label['id']; ?>" placeholder="Label Title" value="<?php echo $label['label_name']; ?>" readonly>
                 <input type="hidden" name="label_id" value="<?php echo $label['id']; ?>" id="label_id<?php echo $label['id']; ?>">
                 <div class="input-group-btn">
                     <button class="btn btn-success" id="change_label<?php echo $label['id'];?>" value="<?php echo $label['id'];?>" type="button"><i class="fa fa-pencil"></i></button>
@@ -27,7 +27,8 @@
                             $("#change_label<?php echo $label['id']; ?>").click(function(event) {
                                 // Prevent the form from submitting via the browser.
                                 event.preventDefault();
-                                update_label($("#label_name"+this.value).val(), this.value);
+                                $("#label_name<?php echo $label['id']; ?>").attr("readonly", false); 
+                                $("#label_name<?php echo $label['id']; ?>").attr("required", true); 
                             });
                             /**
                              * Method when change label details from input

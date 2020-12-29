@@ -11,6 +11,16 @@ unset($minPHPVersion);
 // Path to the front controller (this file)
 define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
+/**
+ * SMTP Configuration
+ */
+define('SMTP_PROTOCOL', "smtp");
+define('SMTP_PORT', 465);
+define('SMTP_HOST', "smtp.gmail.com");
+define('SMTP_USER', "sachinpatlestech@gmail.com");
+define('SMTP_PASS', "Sachin_1996");
+define('SMTP_SENDER_MAIL', "sachinpatlestech@gmail.com");
+define('SMTP_SENDER_NAME', "Sachin Patle");
 // Location of the Paths config file.
 // This is the line that might need to be changed, depending on your folder structure.
 $pathsPath = realpath(FCPATH . '../app/Config/Paths.php');

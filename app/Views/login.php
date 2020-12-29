@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
-    <title>FunDoNotes | Login</title>
+    <title>FunDooNotes | Login</title>
     <!-- GLOBAL MAINLY STYLES-->
     <link href="<?php echo base_url('/assets/vendors/bootstrap/dist/css/bootstrap.min.css');?>" rel="stylesheet" />
     <link href="<?php echo base_url('/assets/vendors/font-awesome/css/font-awesome.min.css');?>" rel="stylesheet" />
@@ -19,7 +19,7 @@
 <body class="bg-silver-300">
     <div class="content">
         <div class="brand">
-            <a class="link" href="">FunDoNotes</a>
+            <a class="link" href="">FunDooNotes</a>
         </div>
         <form id="login-form" action="<?= site_url('/user_login') ?>" method="post">
             <h2 class="login-title">Log in</h2>

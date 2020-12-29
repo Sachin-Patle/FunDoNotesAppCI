@@ -2,32 +2,34 @@
     <?php
     $i = 1;
     foreach ($notes as $note) {
-        $image=WRITEPATH."temp\\".$note['image'];
-         ?>
+        $image = base_url() . "/temp/" . $note['image'];
+    ?>
         <div class="col-md-4" id="note<?php echo $note['id']; ?>">
             <div id="note_card<?php echo $note['id']; ?>" class="card ibox" style="background-color:<?php echo $note['color']; ?>;">
-            <?php
-            if(!empty($note['image']))
-            {
+                <?php
+                if (!empty($note['image'])) {
                 ?>
-            <img class="card-img-top" src="<?php echo $image; ?>" />
-            <?php
-            }
-            ?>
+                    <img id="card_image<?php echo $note['id']; ?>" class="card-img-top" src="<?php echo $image; ?>" />
+                <?php
+                }
+                ?>
                 <div class="ibox-head">
                     <div class="ibox-title"><?php echo $note['title']; ?></div>
                     <div class="ibox-tools">
                         <?php
-                        if($note['pin']==0)
-                        {
-                            ?>
-                        <a id="pin<?php echo $note['id']; ?>" class="ibox-collapse" title="Pin"><i class="ti-pin2"></i></a>
-                        <?php
-                        }
-                        else
-                        {
+                        if ($note['status'] == 1) {
                         ?>
-                        <a id="unpin<?php echo $note['id']; ?>" title="Unpin" class="ibox-collapse"><i class="fa fa-thumb-tack"></i></a>
+                            <?php
+                            if ($note['pin'] == 0) {
+                            ?>
+                                <a id="pin_note<?php echo $note['id']; ?>" class="ibox-collapse" title="Pin"><i class="ti-pin2"></i></a>
+                            <?php
+                            } else {
+                            ?>
+                                <a id="unpin_note<?php echo $note['id']; ?>" title="Unpin" class="ibox-collapse"><i class="fa fa-thumb-tack"></i></a>
+                            <?php
+                            }
+                            ?>
                         <?php
                         }
                         ?>
@@ -43,7 +45,7 @@
                         <?php
                         if ($note['status'] == 1) {
                         ?>
-                            <input style="height:35px;" type="color" title="Change color" id="change_color<?php echo $note['id']; ?>" value="<?php echo $note['color']; ?>" class="btn btn-default btn-rounded">
+                            <button data-toggle="modal" title="Change Color" data-target="#colorModal<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="ti-paint-bucket"></i></button>
                             <button data-toggle="modal" title="Add image" data-target="#imageModal<?php echo $note['id']; ?>" class="btn btn-default btn-rounded"><i class="fa fa-image"></i></button>
                             <?php
                             if ($note['archive'] == 0) {
@@ -103,9 +105,9 @@
         </div>
         <!-- End Modal -->
 
-        <!-- editModal -->
+        <!-- imageModal -->
         <div class="modal fade" id="imageModal<?php echo $note['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
@@ -113,17 +115,76 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form method="post" action="<?= site_url('/change-image') ?>" enctype="multipart/form-data">
+                    <form id="form_image<?php echo $note['id']; ?>" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Select Image</label>
                                 <input type="hidden" name="note_id" value="<?php echo $note['id']; ?>">
-                                <input type="file" name="file" class="form-control" accept="image/*" required>
+                                <input type="file" name="file" id="note_image<?php echo $note['id']; ?>" class="form-control" accept="image/*" required>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeSubmit"><i class="fa fa-times"></i> Close</button>
                             <button type="submit" name="updateTmage" class="btn btn-info"><i class="fa fa-upload"></i> Upload</button>
+                            <button type="button" name="removeTmage" class="btn btn-danger" id="remove_image<?php echo $note['id']; ?>"><i class="fa fa-trash"></i> Remove Image</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+
+        <!-- colorModal -->
+        <div class="modal fade" id="colorModal<?php echo $note['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Choose Color</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="change_color<?php echo $note['id']; ?>">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" name="note_id" value="<?php echo $note['id']; ?>">
+
+                                <div>
+                                    <?php
+                                    if (empty($note['color'])) {
+                                        $default = "checked";
+                                        // $check="";
+                                    } else {
+                                        $default = "";
+                                        // $check="checked";
+                                    }
+                                    ?>
+                                    <label class="ui-radio ui-radio-inline" title="Default">
+                                        <input type="radio" name="color" name="color" value="#fff" checked="<?php echo $default; ?>">
+                                        <span class="input-span" style="background-color: white"></span></label>
+                                    <?php
+                                    if ($colors) {
+                                        foreach ($colors as $color) {
+
+                                            if ($color['color'] == $note['color']) {
+                                                $check = "";
+                                            } else {
+                                                $check = "checked";
+                                            }
+                                    ?>
+                                            <label class="ui-radio ui-radio-inline" title="<?php echo $color['color_name']; ?>">
+                                                <input type="radio" name="color" name="color" value="<?php echo $color['color']; ?>" checked="<?php echo $check; ?>">
+                                                <span class="input-span" style="background-color: <?php echo $color['color']; ?>;"></span></label>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeSubmit"><i class="fa fa-times"></i> Close</button>
                         </div>
                     </form>
                 </div>
@@ -166,16 +227,23 @@
                     // Prevent the form from submitting via the browser.
                     event.preventDefault();
                     update_note();
-                    get_notes();
                 });
                 /**
-                 * Method when submitting form to update note details
+                 * Method when submitting form to update note image
                  */
                 $("#form_image<?php echo $note['id']; ?>").submit(function(event) {
                     // Prevent the form from submitting via the browser.
                     event.preventDefault();
-                    update_image();
-                    get_notes();
+                    update_image(<?php echo $note['id']; ?>);
+                });
+
+                /**
+                 * Method when click on remove image button
+                 */
+                $("#remove_image<?php echo $note['id']; ?>").click(function(event) {
+                    // Prevent the form from submitting via the browser.
+                    event.preventDefault();
+                    remove_image(<?php echo $note['id']; ?>);
                 });
                 /**
                  * Method when submitting form to delete note details
@@ -184,7 +252,6 @@
                     // Prevent the form from submitting via the browser.
                     event.preventDefault();
                     delete_note();
-                    get_notes();
                 });
                 /**
                  * Method when click on archive button
@@ -201,6 +268,23 @@
                     // Prevent the form from submitting via the browser.
                     event.preventDefault();
                     unset_archive(this.value);
+                });
+
+                /**
+                 * Method when click on pin button
+                 */
+                $("#pin_note<?php echo $note['id']; ?>").click(function(event) {
+                    // Prevent the form from submitting via the browser.
+                    event.preventDefault();
+                    set_pin(<?php echo $note['id']; ?>);
+                });
+                /**
+                 * Method when click on unpin button
+                 */
+                $("#unpin_note<?php echo $note['id']; ?>").click(function(event) {
+                    // Prevent the form from submitting via the browser.
+                    event.preventDefault();
+                    unset_pin(<?php echo $note['id']; ?>);
                 });
 
                 /**
@@ -222,7 +306,7 @@
                 /**
                  * Method when select color from color picker
                  */
-                $("#change_color<?php echo $note['id']; ?>").change(function(event) {
+                $("#change_color<?php echo $note['id']; ?> input:radio").change(function(event) {
                     // Prevent the form from submitting via the browser.
                     event.preventDefault();
                     change_color(this.value, <?php echo $note['id']; ?>);
@@ -254,23 +338,52 @@
                  * @method - update_image
                  * @description
                  * Method to update note details
-                 * Getting form data by form id and updating changes according to id by using ajax
+                 * Updating note image changes according to id by using ajax
                  */
-                function update_image() {
-                    var form_data = $('#form_image<?php echo $note['id']; ?>').serialize();
-
+                function update_image(val) {
+                    var file_data = $("#note_image<?php echo $note['id']; ?>").prop("files")[0];
+                    var form_data = new FormData();
+                    form_data.append("file", file_data);
+                    form_data.append("note_id", val);
                     $.ajax({
                         url: "<?= site_url('/change-image') ?>",
-                        method: "POST",
+                        contentType: false,
+                        processData: false,
                         data: form_data,
+                        method: 'POST',
                         success: function(result) {
-                            alert(result);
-                            // $("#form_edit<?php echo $note['id']; ?>")[0].reset();
-                            // $("#editModal<?php echo $note['id']; ?>").modal('toggle');
-                            // $("#note<?php echo $note['id']; ?>").html(result);
+                            $("#form_image<?php echo $note['id']; ?>")[0].reset();
+                            $("#imageModal<?php echo $note['id']; ?>").modal('toggle');
+                            $("#note<?php echo $note['id']; ?>").html(result);
                         },
                         error: function() {
-                            alert("Failed to update note");
+                            alert("Failed to update Image");
+                        }
+                    });
+                }
+
+                /**
+                 * @method - remove_image
+                 * @param - id
+                 * @description
+                 * Method to set note as archive note
+                 * Getting id by param and setting note as archive by using ajax
+                 */
+                function remove_image(id) {
+
+                    $.ajax({
+                        url: "<?= site_url('/remove-image') ?>",
+                        method: "POST",
+                        data: {
+                            note_id: id
+                        },
+                        success: function(result) {
+                            $("#form_image<?php echo $note['id']; ?>")[0].reset();
+                            $("#imageModal<?php echo $note['id']; ?>").modal('toggle');
+                            $("#note<?php echo $note['id']; ?>").html(result);
+                        },
+                        error: function() {
+                            alert("Failed to remove image");
                         }
                     });
                 }
@@ -313,7 +426,7 @@
                         data: {
                             note_id: id
                         },
-                        success: function(data) {
+                        success: function(result) {
                             $("#note<?php echo $note['id']; ?>").remove();
                         },
                         error: function() {
@@ -342,6 +455,54 @@
                         },
                         error: function() {
                             alert("Failed to unarchive note");
+                        }
+                    });
+                }
+
+                /**
+                 * @method - set_pin
+                 * @param - id
+                 * @description
+                 * Method to pin note
+                 * Getting id by param and setting note as pinned note by using ajax
+                 */
+                function set_pin(id) {
+
+                    $.ajax({
+                        url: "<?= site_url('/set-pin') ?>",
+                        method: "POST",
+                        data: {
+                            note_id: id
+                        },
+                        success: function(result) {
+                            $("#note<?php echo $note['id']; ?>").html(result);
+                        },
+                        error: function() {
+                            alert("Failed to archive note");
+                        }
+                    });
+                }
+
+                /**
+                 * @method - unset_pin
+                 * @param - id
+                 * @description
+                 * Method to unpin note
+                 * Getting id by param and remove from pin by using ajax
+                 */
+                function unset_pin(id) {
+
+                    $.ajax({
+                        url: "<?= site_url('/unset-pin') ?>",
+                        method: "POST",
+                        data: {
+                            note_id: id
+                        },
+                        success: function(result) {
+                            $("#note<?php echo $note['id']; ?>").html(result);
+                        },
+                        error: function() {
+                            alert("Failed to archive note");
                         }
                     });
                 }
