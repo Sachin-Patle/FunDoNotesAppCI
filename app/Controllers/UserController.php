@@ -72,7 +72,7 @@ class UserController extends Controller
             $user_name = $this->request->getVar('first_name');
             $user_pass = $this->request->getVar('password');
             $user_email = $this->request->getVar('email');
-            $message = "<div style='box-shadow: 3px 3px 3px #888888;padding:15px;background-color:cornsilk; border-radius:10px;'><h2 style='font-family:calibri; text-shadow:2px 2px 1px rgba(0,0,0,0.2); border-bottom: inset #ecd67c;'>Welcome to FunDooNotes</h2><p>Dear $user_name, Thanks for Registration..<br>Your login credentials are :<br><b>Username :</b> $user_email <br> <b> Password :</b>  $user_pass <br>Please do note share it with anyone..</p></div>";
+            $message = "<div style='box-shadow: 3px 3px 3px #888888;padding:15px;background-color:cornsilk; border-radius:10px;'><h2 style='font-family:calibri; text-shadow:2px 2px 1px rgba(0,0,0,0.2); border-bottom: inset #ecd67c;'>Welcome to FunDooNotes</h2><p>Dear $user_name, Thanks for Registration..<br>Your login credentials are :<br><b>Username :</b> $user_email <br> <b> Password :</b>  $user_pass <br>Please do not share it with anyone..</p></div>";
             $email = \Config\Services::email();
             $email->setTo($user_email);
             $email->setSubject('FundoNotes | Registration Successfull');
