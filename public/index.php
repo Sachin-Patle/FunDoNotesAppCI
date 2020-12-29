@@ -18,7 +18,7 @@ define('SMTP_PROTOCOL', "smtp");
 define('SMTP_PORT', 465);
 define('SMTP_HOST', "smtp.gmail.com");
 define('SMTP_USER', "sachinpatlestech@gmail.com");
-define('SMTP_PASS', "Sachin_1996");
+define('SMTP_PASS', "123456");
 define('SMTP_SENDER_MAIL', "sachinpatlestech@gmail.com");
 define('SMTP_SENDER_NAME', "Sachin Patle");
 // Location of the Paths config file.

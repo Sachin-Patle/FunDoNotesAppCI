@@ -133,7 +133,7 @@ class NotesController extends Controller
             'archive' => false,
             'trash' => false,
         ];
-        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        $data['notes'] = $notes_obj->where($notes_by)->orderBy('id', 'DESC')->findAll();
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
@@ -163,7 +163,7 @@ class NotesController extends Controller
             'trash' => false,
         ];
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
-        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        $data['notes'] = $notes_obj->where($notes_by)->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
@@ -190,7 +190,7 @@ class NotesController extends Controller
             'trash' => false,
         ];
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
-        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        $data['notes'] = $notes_obj->where($notes_by)->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
@@ -219,7 +219,7 @@ class NotesController extends Controller
             'trash' => false,
         ];
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
-        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        $data['notes'] = $notes_obj->where($notes_by)->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
@@ -249,7 +249,7 @@ class NotesController extends Controller
             'trash' => false,
         ];
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
-        $data['notes'] = $notes_obj->where($notes_by)->findAll();
+        $data['notes'] = $notes_obj->where($notes_by)->orderBy('id', 'DESC')->findAll();
         /**
          * Checking user_id is empty or not if yes it throws back to login page
          */
