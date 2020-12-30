@@ -142,9 +142,6 @@ class LabelsController extends Controller
             'updated' => date('d-m-y h:i:s'),
         ];
         $labels_obj->update($update_by, $data);
-
-        // $data['updated_label'] = $labels_obj->where('id', $id)->first();
-        // return view('updated-label', $data);
     }
 
     /**

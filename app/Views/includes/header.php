@@ -7,16 +7,16 @@
     <meta name="viewport" content="width=device-width initial-scale=1.0">
     <title>FunDooNotes</title>
     <!-- GLOBAL MAINLY STYLES-->
-    <link href="<?php echo base_url('/assets/vendors/bootstrap/dist/css/bootstrap.min.css');?>" rel="stylesheet" />
-    <link href="<?php echo base_url('/assets/vendors/font-awesome/css/font-awesome.min.css');?>" rel="stylesheet" />
-    <link href="<?php echo base_url('/assets/vendors/themify-icons/css/themify-icons.css');?>" rel="stylesheet" />
+    <link href="<?php echo base_url('/assets/vendors/bootstrap/dist/css/bootstrap.min.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo base_url('/assets/vendors/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet" />
+    <link href="<?php echo base_url('/assets/vendors/themify-icons/css/themify-icons.css'); ?>" rel="stylesheet" />
     <!-- PLUGINS STYLES-->
-    <link href="<?php echo base_url('/assets/vendors/DataTables/datatables.min.css');?>" rel="stylesheet" />
+    <link href="<?php echo base_url('/assets/vendors/DataTables/datatables.min.css'); ?>" rel="stylesheet" />
     <!-- THEME STYLES-->
-    <link href="<?php echo base_url('/assets/css/main.min.css');?>" rel="stylesheet" />
+    <link href="<?php echo base_url('/assets/css/main.min.css'); ?>" rel="stylesheet" />
     <!-- PAGE LEVEL STYLES-->
 
-    <script src="<?php echo base_url('/assets/js/jquery-1.11.1.min.js');?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('/assets/js/jquery-1.11.1.min.js'); ?>" type="text/javascript"></script>
 </head>
 
 <body class="fixed-navbar">
@@ -43,11 +43,9 @@
                 <ul class="nav navbar-toolbar">
                     <li class="dropdown dropdown-user">
                         <a class="nav-link dropdown-toggle link" data-toggle="dropdown">
-                            <img src="<?php echo base_url('/assets/img/admin-avatar.png');?>" />
-                            <span></span><?php echo $_SESSION['user_name'];?><i class="fa fa-angle-down m-l-5"></i></a>
+                            <img src="<?php echo base_url('/assets/img/admin-avatar.png'); ?>" />
+                            <span></span><?php echo $_SESSION['user_name']; ?><i class="fa fa-angle-down m-l-5"></i></a>
                         <ul class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href=""><i class="fa fa-user"></i>Profile</a>
-                            <li class="dropdown-divider"></li>
                             <a class="dropdown-item" href="<?= site_url('/logout') ?>"><i class="fa fa-power-off"></i>Logout</a>
                         </ul>
                     </li>
@@ -56,4 +54,4 @@
             </div>
         </header>
         <!-- END HEADER-->
-        <?php require_once "menu.php";?>
+        <?php require_once "menu.php"; ?>

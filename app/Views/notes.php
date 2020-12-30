@@ -53,11 +53,21 @@
                 <!-- End Modal -->
             </div>
         </div>
+        <div class="row" id="pinned_header" style="display: none;">
+            <div class="col-sm-12">
+                <h4><strong>Pinned Notes</strong></h4>
+                <hr>
+            </div>
+        </div>
+        <div class="row" id="pin_result">
+        </div>
+        <div class="row" id="other_header" style="display: none;">
+            <div class="col-sm-12">
+                <h4><strong>Other Notes</strong></h4>
+                <hr>
+            </div>
+        </div>
         <div class="row" id="notes_result">
-
-
-
-
         </div>
     </div>
     <!-- END PAGE CONTENT-->
@@ -79,6 +89,7 @@
                 } else {
                 ?>
                     get_notes();
+                    pinned_notes();
                 <?php
                 }
                 ?>
@@ -106,6 +117,30 @@
             });
 
             /**
+             * @method - pinned_notes
+             * @description
+             * Method to get and display all note details
+             */
+            function pinned_notes() {
+                $.ajax({
+                    type: "GET",
+                    url: "<?= site_url('/pinned-notes') ?>",
+                    success: function(result) {
+                        if (result == "") {
+                            $('#pinned_header').hide();
+                            $('#other_header').hide();
+                        } else {
+                            $('#pinned_header').show();
+                            $('#other_header').show();
+                        }
+                        $('#pin_result').empty();
+                        $('#pin_result').html(result);
+                    },
+                    error: function(e) {}
+                });
+            }
+
+            /**
              * @method - get_notes
              * @description
              * Method to get and display all note details
@@ -119,7 +154,7 @@
                         $('#notes_result').html(result);
                     },
                     error: function(e) {
-                        $('#notes_result').html("<h3>No data found</h3>");
+                        // $('#notes_result').html("<h3>No data found</h3>");
                     }
                 });
             }
@@ -219,8 +254,6 @@
                     method: "POST",
                     data: form_data,
                     success: function(result) {
-                        // alert(result);
-                        // $('#notes_result').append("<div class='col-md-4'><div class='card ibox'><div class='ibox-head'><div class='ibox-title'>"+result+"</div><div class='ibox-tools'><a class='ibox-collapse'><i class='fa fa-minus'></i></a><a class='fullscreen-link'><i class='fa fa-expand'></i></a></div></div><div class='card-body ibox-body'><p>Note</p></div><div class='card-footer'><div class='float-right'><button data-toggle='modal' data-target='#editModal' class='btn btn-primary btn-sm'><i class='fa fa-pencil'></i></button></div></div></div></div>")
                         get_note_by_id(result);
                         $("#form_submit")[0].reset();
                         $('#submitModal').modal('toggle');

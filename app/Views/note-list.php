@@ -475,10 +475,13 @@
                             note_id: id
                         },
                         success: function(result) {
-                            $("#note<?php echo $note['id']; ?>").html(result);
+                            $("#notes_result").find("#note<?php echo $note['id']; ?>").remove();
+                            $('#pinned_header').show();
+                            $('#other_header').show();
+                            $('#pin_result').append(result);
                         },
                         error: function() {
-                            alert("Failed to archive note");
+                            alert("Failed to pin note");
                         }
                     });
                 }
@@ -499,10 +502,15 @@
                             note_id: id
                         },
                         success: function(result) {
-                            $("#note<?php echo $note['id']; ?>").html(result);
+                            $("#pin_result").find("#note<?php echo $note['id']; ?>").remove();
+                            $('#notes_result').append(result);
+                            if ($('#pin_result').is(':empty')) {
+                                $('#pinned_header').hide();
+                                $('#other_header').hide();
+                            }
                         },
                         error: function() {
-                            alert("Failed to archive note");
+                            alert("Failed to unpin note");
                         }
                     });
                 }

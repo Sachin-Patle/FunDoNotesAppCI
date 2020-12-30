@@ -132,6 +132,7 @@ class NotesController extends Controller
             'status' => true,
             'archive' => false,
             'trash' => false,
+            'pin' => false,
         ];
         $data['notes'] = $notes_obj->where($notes_by)->orderBy('id', 'DESC')->findAll();
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
@@ -391,8 +392,8 @@ class NotesController extends Controller
         ];
         $notes_obj->update($update_by, $data);
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
-        $data['updated_note'] = $notes_obj->where('id', $id)->first();
-        return view('updated-note', $data);
+        $data['notes'] = $notes_obj->where($update_by)->findAll();
+        return view('note-list', $data);
     }
 
     /**
@@ -415,8 +416,8 @@ class NotesController extends Controller
         ];
         $notes_obj->update($update_by, $data);
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
-        $data['updated_note'] = $notes_obj->where('id', $id)->first();
-        return view('updated-note', $data);
+        $data['notes'] = $notes_obj->where($update_by)->findAll();
+        return view('note-list', $data);
     }
 
     /**
@@ -523,9 +524,9 @@ class NotesController extends Controller
         if (!$image_file) {
             print_r('Choose a valid file');
         } else {
-            if (!empty($note_info['image']) && file_exists(FCPATH."/temp/". $note_info['image'])) {
-                $path = FCPATH."/temp/". $note_info['image'];
-                unlink(FCPATH."/temp/". $note_info['image']);
+            if (!empty($note_info['image']) && file_exists(FCPATH . "/temp/" . $note_info['image'])) {
+                $path = FCPATH . "/temp/" . $note_info['image'];
+                unlink(FCPATH . "/temp/" . $note_info['image']);
             }
             $image = $this->request->getFile('file');
             $new_file_name = str_replace(' ', '-', $note_info['title']) . date("d-m-Y_h-i-s-A") . "." . $image->getExtension();
@@ -555,18 +556,18 @@ class NotesController extends Controller
             'user_id'  => $this->session->user_id,
         ];
         $note_info = $notes_obj->where($update_by)->first();
-        
-        if (!empty($note_info['image']) && file_exists(FCPATH."/temp/". $note_info['image'])) {
-                $path = FCPATH."/temp/". $note_info['image'];
-                unlink(FCPATH."/temp/". $note_info['image']);
-            }
 
-            $data = [
-                'image' =>  '',
-            ];
-            $notes_obj->update($update_by, $data);
-            $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
-            $data['updated_note'] = $notes_obj->where('id', $this->request->getVar('note_id'))->first();
-            return view('updated-note', $data);
+        if (!empty($note_info['image']) && file_exists(FCPATH . "/temp/" . $note_info['image'])) {
+            $path = FCPATH . "/temp/" . $note_info['image'];
+            unlink(FCPATH . "/temp/" . $note_info['image']);
+        }
+
+        $data = [
+            'image' =>  '',
+        ];
+        $notes_obj->update($update_by, $data);
+        $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
+        $data['updated_note'] = $notes_obj->where('id', $this->request->getVar('note_id'))->first();
+        return view('updated-note', $data);
     }
 }
