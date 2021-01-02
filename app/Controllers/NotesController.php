@@ -19,10 +19,10 @@ class NotesController extends Controller
     }
     /**
      * @method - notes()
-     * @return - login/notes-list view
+     * @return - login/notes list page
      * @descrition
-     * Method to get notes-list
-     * Getting list from notes table and return output in array format
+     * Method to show notes page
+     * Displaying notes page
      */
     public function notes()
     {
@@ -38,10 +38,10 @@ class NotesController extends Controller
 
     /**
      * @method - archive()
-     * @return - login/notes-list view
+     * @return - login/archive list page
      * @descrition
-     * Method to get notes-list
-     * Getting list from notes table and return output in array format
+     * Method to show archive page
+     * Displaying archive page
      */
     public function archive()
     {
@@ -57,10 +57,10 @@ class NotesController extends Controller
 
     /**
      * @method - pinned()
-     * @return - login/notes-list view
+     * @return - login/pinned notes page
      * @descrition
-     * Method to get notes-list
-     * Getting list from notes table and return output in array format
+     * Method to show pinned-notes page
+     * Diaplaying pinned-notes page
      */
     public function pinned()
     {
@@ -76,10 +76,10 @@ class NotesController extends Controller
 
     /**
      * @method - trash()
-     * @return - login/trash-notes-list view
+     * @return - login/trash page
      * @descrition
-     * Method to get notes-list from trash
-     * Getting list from notes table and return output in array format
+     * Method to show trash page
+     * Displaying trash page
      */
     public function trash()
     {
@@ -95,7 +95,7 @@ class NotesController extends Controller
 
     /**
      * @method - single_note()
-     * @return - edit_note view
+     * @return - note-list view
      * @description
      * Method to get single notes details by id
      */
@@ -150,7 +150,7 @@ class NotesController extends Controller
      * @method - archive_list()
      * @return - login/notes-list view
      * @descrition
-     * Method to get notes-list
+     * Method to get list of archive notes
      * Getting list from notes table and return output in array format
      */
     public function archive_list()
@@ -178,7 +178,7 @@ class NotesController extends Controller
      * @method - trash_list()
      * @return - login/notes-list view
      * @descrition
-     * Method to get notes-list
+     * Method to get list of trash notes
      * Getting list from notes table and return output in array format
      */
     public function trash_list()
@@ -206,7 +206,7 @@ class NotesController extends Controller
      * @method - pinned_notes()
      * @return - login/notes-list view
      * @descrition
-     * Method to get notes-list
+     * Method to get list of pinned notes
      * Getting list from notes table and return output in array format
      */
     public function pinned_notes()
@@ -235,7 +235,7 @@ class NotesController extends Controller
      * @method - notes_list_by_label()
      * @return - login/notes-list view
      * @descrition
-     * Method to get notes-list
+     * Method to get list of notes by label
      * Getting list from notes table and return output in array format
      */
     public function notes_list_by_label()
@@ -263,8 +263,10 @@ class NotesController extends Controller
 
     /**
      * @method - save_note()
+     * @return - last insert id
      * @description
-     * Method to get inputs by post and inserts data into notes table
+     * Method to store note in database table
+     * Getting inputs by post and inserts data into notes table
      */
     public function save_note()
     {
@@ -287,9 +289,10 @@ class NotesController extends Controller
 
     /**
      * @method - update_note()
-     * @return - notes-list view
+     * @return - updated-note view
      * @description
-     * Method to get inputs by post and update data according to id
+     * Method to update a single note
+     * Getting inputs by post and update data according to id
      */
     public function update_note()
     {
@@ -316,7 +319,8 @@ class NotesController extends Controller
      * @method - delete_note()
      * @return - notes-list view
      * @description
-     * Method to get input by get and delete data according to id
+     * Method to delete a single note
+     * Getting input by post and delete data by id
      */
     public function delete_note()
     {
@@ -329,7 +333,10 @@ class NotesController extends Controller
             'trash'  => true,
             'updated' => date('d-m-y h:i:s'),
         ];
-        // $data['note'] = $notes_obj->where($delete_by)->delete();
+        $note_info = $notes_obj->where($delete_by)->first();
+        if (!empty($note_info['image']) && file_exists(FCPATH . "/temp/" . $note_info['image'])) {
+            unlink(FCPATH . "/temp/" . $note_info['image']);
+        }
         $notes_obj->update($delete_by, $data);
         return $this->response->redirect(site_url('/notes-list'));
     }
@@ -337,6 +344,7 @@ class NotesController extends Controller
      * @method - set_archive()
      * @description
      * Method to set an note as archive note
+     * Getting input by post and setting archive by id
      */
     public function set_archive()
     {
@@ -356,6 +364,7 @@ class NotesController extends Controller
      * @method - unset_archive()
      * @description
      * Method to unset an note from archive note
+     * Getting input by post and removing note from archive by id
      */
     public function unset_archive()
     {
@@ -376,6 +385,7 @@ class NotesController extends Controller
      * @method - set_pin()
      * @description
      * Method to set an note as pin note
+     * Getting input by post and setting note as pinned note by id
      */
     public function set_pin()
     {
@@ -400,6 +410,7 @@ class NotesController extends Controller
      * @method - unset_pin()
      * @description
      * Method to unpin note
+     * Getting input by post and removing note from pinned notes by id
      */
     public function unset_pin()
     {
@@ -424,6 +435,7 @@ class NotesController extends Controller
      * @method - trash_note()
      * @description
      * Method to move note to trash
+     * Getting input by post and setting note as trash note by id
      */
     public function trash_note()
     {
@@ -444,6 +456,7 @@ class NotesController extends Controller
      * @method - restore_note()
      * @description
      * Method to restore note from trash
+     * Getting input by post and restoring note from trash according to id
      */
     public function restore_note()
     {
@@ -463,27 +476,43 @@ class NotesController extends Controller
     /**
      * @method - empty_trash()
      * @description
-     * Method to move note to trash by id
+     * Method to empty trash
+     * Getting input by post and removing notes from trash by user id
      */
     public function empty_trash()
     {
         $notes_obj = new NotesModel();
-        $delete_by = [
+        $select_by = [
             'user_id' => $this->session->user_id,
             'status' => false,
+            'trash' => false,
         ];
         $data = [
             'trash' => true,
             'updated' => date('d-m-y h:i:s'),
         ];
-        // $data['note'] = $notes_obj->where($delete_by)->delete();
-        $notes_obj->update($delete_by, $data);
+
+        $notes['notes']=$notes_obj->where($select_by, $data)->findAll();
+        foreach($notes['notes'] as $note)
+        {
+            /**
+             * Deleting image file if exists
+             */
+            if (!empty($note['image']) && file_exists(FCPATH . "/temp/" . $note['image'])) {
+                unlink(FCPATH . "/temp/" . $note['image']);
+            }
+            $update_by = [
+                'id' => $note['id'],
+            ];
+            $notes_obj->update($update_by, $data);
+        }
     }
 
     /**
      * @method - change_color()
      * @description
-     * Method to change note background color
+     * Method to change background color of note
+     * Getting input by post and changing background color of note by id
      */
     public function change_color()
     {
@@ -500,7 +529,8 @@ class NotesController extends Controller
     /**
      * @method - change_image()
      * @description
-     * Method to change note background color
+     * Method to change or add image to note
+     * Getting input by post and changing image of note by id
      */
     public function change_image()
     {
@@ -517,7 +547,7 @@ class NotesController extends Controller
             'file' => [
                 'uploaded[file]',
                 'mime_in[file,image/jpg,image/jpeg,image/png]',
-                'max_size[file,1024]',
+                'max_size[file,2048]',
             ]
         ]);
 
@@ -545,7 +575,8 @@ class NotesController extends Controller
     /**
      * @method - remove_image()
      * @description
-     * Method to change note background color
+     * Method to remove image from note
+     * Getting input by post and removing image from note by id
      */
     public function remove_image()
     {

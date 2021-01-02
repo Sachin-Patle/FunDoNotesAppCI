@@ -40,6 +40,11 @@
                 </a>
             </li>
             <li>
+                <a href="<?= site_url('/pinned') ?>"><i class="sidebar-item-icon fa fa-thumb-tack"></i>
+                    <span class="nav-label">Pinned Notes</span>
+                </a>
+            </li>
+            <li>
                 <a href="<?= site_url('/logout') ?>"><i class="sidebar-item-icon fa fa-sign-out"></i>
                     <span class="nav-label">Logout</span>
                 </a>

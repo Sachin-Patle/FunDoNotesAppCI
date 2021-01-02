@@ -295,7 +295,7 @@ if ($updated_note) {
             /**
              * Method when select color from color picker
              */
-            $("#change_color<?php echo $updated_note['id']; ?>").change(function(event) {
+            $("#change_color<?php echo $updated_note['id']; ?> input:radio").change(function(event) {
                 // Prevent the form from submitting via the browser.
                 event.preventDefault();
                 change_color(this.value, <?php echo $updated_note['id']; ?>);
@@ -573,7 +573,6 @@ if ($updated_note) {
                     },
                     success: function(data) {
                         $("#note_card<?php echo $updated_note['id']; ?>").css("background-color", color);
-                        // $("#change_color<?php echo $updated_note['id']; ?>").css("background-color", color);
                     },
                     error: function() {
                         alert("Failed to change color");

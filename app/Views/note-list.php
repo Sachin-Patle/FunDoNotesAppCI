@@ -582,7 +582,6 @@
                         },
                         success: function(data) {
                             $("#note_card<?php echo $note['id']; ?>").css("background-color", color);
-                            // $("#change_color<?php echo $note['id']; ?>").css("background-color", color);
                         },
                         error: function() {
                             alert("Failed to change color");
