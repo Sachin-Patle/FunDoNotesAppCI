@@ -15,8 +15,17 @@ class NotesController extends Controller
      */
     function __construct()
     {
+        /**
+         * Starting session
+         */
         $this->session = \Config\Services::session();
+
+        /**
+         * Calling method auto_archive
+         */
+        // $this->auto_archive();
     }
+    
     /**
      * @method - notes()
      * @return - login/notes list page
@@ -279,7 +288,7 @@ class NotesController extends Controller
             'title' => $this->request->getVar('title'),
             'note'  => $this->request->getVar('note'),
             'status' => true,
-            'created' => date('d-m-y h:i:s'),
+            'created' => date('Y-m-d H:i:s'),
 
         ];
 
@@ -306,7 +315,7 @@ class NotesController extends Controller
         $data = [
             'title' => $this->request->getVar('title'),
             'note'  => $this->request->getVar('note'),
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $notes_obj->update($update_by, $data);
 
@@ -331,7 +340,7 @@ class NotesController extends Controller
         ];
         $data = [
             'trash'  => true,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $note_info = $notes_obj->where($delete_by)->first();
         if (!empty($note_info['image']) && file_exists(FCPATH . "/temp/" . $note_info['image'])) {
@@ -356,7 +365,7 @@ class NotesController extends Controller
         ];
         $data = [
             'archive'  => true,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $notes_obj->update($update_by, $data);
     }
@@ -376,7 +385,7 @@ class NotesController extends Controller
         ];
         $data = [
             'archive'  => false,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $notes_obj->update($update_by, $data);
     }
@@ -398,7 +407,7 @@ class NotesController extends Controller
         ];
         $data = [
             'pin'  => true,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $notes_obj->update($update_by, $data);
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
@@ -423,7 +432,7 @@ class NotesController extends Controller
         ];
         $data = [
             'pin'  => false,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $notes_obj->update($update_by, $data);
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
@@ -447,7 +456,7 @@ class NotesController extends Controller
         ];
         $data = [
             'status'  => false,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $notes_obj->update($update_by, $data);
     }
@@ -468,7 +477,7 @@ class NotesController extends Controller
         ];
         $data = [
             'status'  => true,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
         $notes_obj->update($update_by, $data);
     }
@@ -489,12 +498,11 @@ class NotesController extends Controller
         ];
         $data = [
             'trash' => true,
-            'updated' => date('d-m-y h:i:s'),
+            'updated' => date('Y-m-d H:i:s'),
         ];
 
-        $notes['notes']=$notes_obj->where($select_by, $data)->findAll();
-        foreach($notes['notes'] as $note)
-        {
+        $notes['notes'] = $notes_obj->where($select_by, $data)->findAll();
+        foreach ($notes['notes'] as $note) {
             /**
              * Deleting image file if exists
              */
@@ -600,5 +608,43 @@ class NotesController extends Controller
         $data['colors'] = $color_obj->orderBy('id', 'DESC')->findAll();
         $data['updated_note'] = $notes_obj->where('id', $this->request->getVar('note_id'))->first();
         return view('updated-note', $data);
+    }
+
+    /**
+     * @method - auto_archive()
+     * @descrition
+     * Method to auto archive notes
+     * Setting notes as archive if it has been more than 30 days from last update
+     */
+    public function auto_archive()
+    {
+        $notes_obj = new NotesModel();
+        $by = [
+            'trash' => false,
+        ];
+        $notes_obj->select('updated, id, trash');
+        $data['list'] = $notes_obj->where($by)->orderBy('id', 'DESC')->findAll();
+        foreach ($data['list'] as $note) 
+        {
+            $updated_date =  $note['updated'];
+            $current_date = date('Y-m-d H:i:s');
+
+            $diff = strtotime($current_date) - strtotime($updated_date);
+            $no_of_days    = floor($diff/(60*60*24));   
+            $fullHours   = floor(($diff-($no_of_days*60*60*24))/(60*60));   
+            $fullMinutes = floor(($diff-($no_of_days*60*60*24)-($fullHours*60*60))/60);
+            if($no_of_days > 30)
+            {
+                $update_by=[
+                    'id' => $note['id'],
+                ];
+                $data=[
+                    'archive' => true,
+                    'updated' => date('Y-m-d H:i:s'),
+                ];
+
+                $notes_obj->update($update_by, $data);
+            }
+        }
     }
 }
